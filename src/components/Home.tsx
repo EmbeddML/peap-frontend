@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { TwitterPoint3D, TwitterUser } from "../models/model";
 import { api } from "../api/api";
-import { forkJoin, merge } from "rxjs";
+import { forkJoin } from "rxjs";
 import { TwitterPlot } from "./TwitterPlot";
 
 export function Home() {
