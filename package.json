@@ -18,7 +18,6 @@
     "@types/styled-components": "^5.1.4",
     "data-forge": "^1.8.12",
     "dotenv": "^8.2.0",
-    "eslint-config-prettier": "^6.15.0",
     "plotly.js": "^1.57.1",
     "prettier": "^2.2.0",
     "react": "^17.0.1",
@@ -56,5 +55,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "eslint-config-prettier": "^6.15.0"
   }
 }

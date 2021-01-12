@@ -3,13 +3,12 @@ import { fromFetch } from "rxjs/fetch";
 import { map, switchMap } from "rxjs/operators";
 import { TwitterPoint2D, TwitterPoint3D, TwitterUser } from "../models/model"
 
-// const BACKEND_API_URL = "http://192.168.0.214";
-const BACKEND_API_URL = "https://politician-analysis-backend.herokuapp.com";
+
+const USE_DUMMY_API = process.env.REACT_APP_USE_DUMMY_API!;
+
+const BACKEND_API_URL = process.env.REACT_APP_BACKEND_API_URL!;
 const TWITTER_USERS_LINK = `${BACKEND_API_URL}/user`;
 const TWITTER_POINTS_3D_LINK = `${BACKEND_API_URL}/point3d`;
-
-
-const USE_DUMMY_API = false;
 
 export interface Api {
   getTwitterPoints3D(): Observable<TwitterPoint3D[]>;
