@@ -4,7 +4,7 @@ import { map, switchMap } from "rxjs/operators";
 import { TwitterPoint2D, TwitterPoint3D, TwitterUser } from "../models/model"
 
 
-const USE_DUMMY_API = process.env.REACT_APP_USE_DUMMY_API!;
+const USE_DUMMY_API = JSON.parse(process.env.REACT_APP_USE_DUMMY_API!);
 
 const BACKEND_API_URL = process.env.REACT_APP_BACKEND_API_URL!;
 const TWITTER_USERS_LINK = `${BACKEND_API_URL}/user`;
