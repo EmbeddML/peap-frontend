@@ -1,4 +1,5 @@
 import { Grid } from "@material-ui/core";
+import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import { CssBaseline } from "@material-ui/core";
 import React from "react";
 import {
@@ -8,19 +9,29 @@ import {
   Redirect,
 } from "react-router-dom";
 import styled from "styled-components";
-import { Home } from "./components/Home";
+import { Politicians } from "./components/Politicians";
 import { MainBar } from "./components/MainBar";
+import { Sidebar } from "./components/Sidebar";
 
 const GridAppBar = styled(Grid)`
-  flex: 0 0 auto
+  flex: 0 0 auto;
 `;
 
 const GridContent = styled(Grid)`
-  flex: 1 0 auto
+  flex: 1 0 auto;
 `;
 
-
 function App() {
+  const [sidebarOpen, setSidebarOpen] = React.useState(false);
+
+  const handleSidebarOpen = () => {
+    setSidebarOpen(true);
+  };
+
+  const handleSidebarClose = () => {
+    setSidebarOpen(false);
+  };
+
   return (
     <Router>
       <CssBaseline />
@@ -32,18 +43,22 @@ function App() {
         wrap="nowrap"
         spacing={0}
       >
-        <GridAppBar item>
-          <MainBar></MainBar>
-        </GridAppBar>
+        <ClickAwayListener onClickAway={handleSidebarClose}>
+          <GridAppBar item>
+            <MainBar handleSidebarOpen={handleSidebarOpen}></MainBar>
+          </GridAppBar>
+        </ClickAwayListener>
+
         <GridContent item>
           <Switch>
-            <Route exact path="/">
-              <Home />
+            <Route exact path="/politicians">
+              <Politicians />
             </Route>
-            <Redirect to="/" />
+            <Redirect to="/politicians" />
           </Switch>
         </GridContent>
       </Grid>
+      <Sidebar {...{ sidebarOpen, handleSidebarClose }}></Sidebar>
     </Router>
   );
 }

@@ -4,7 +4,7 @@ import { api } from "../api/api";
 import { forkJoin } from "rxjs";
 import { TwitterPlot } from "./TwitterPlot";
 
-export function Home() {
+export const Politicians = React.memo(props => {
   const [twitterUsers, setTwitterUsers] = useState<TwitterUser[]>([]);
   const [twitterPoints, setTwitterPoints] = useState<TwitterPoint3D[]>([]);
 
@@ -25,4 +25,4 @@ export function Home() {
       is_3D={true}
     ></TwitterPlot>
   );
-}
+});
