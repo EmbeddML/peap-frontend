@@ -51,7 +51,7 @@ function App() {
 
         <GridContent item>
           <Switch>
-            <Route exact path="/politicians">
+            <Route path="/politicians">
               <Politicians />
             </Route>
             <Redirect to="/politicians" />

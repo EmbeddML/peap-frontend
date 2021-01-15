@@ -3,8 +3,11 @@ import { TwitterPoint3D, TwitterUser } from "../models/model";
 import { api } from "../api/api";
 import { forkJoin } from "rxjs";
 import { TwitterPlot } from "./TwitterPlot";
+import { Link, Route, Switch, useRouteMatch } from "react-router-dom";
+import { PoliticianDetail } from "./PoliticianDetail";
 
-export const Politicians = React.memo(props => {
+export function Politicians() {
+  let { path, url } = useRouteMatch();
   const [twitterUsers, setTwitterUsers] = useState<TwitterUser[]>([]);
   const [twitterPoints, setTwitterPoints] = useState<TwitterPoint3D[]>([]);
 
@@ -19,10 +22,18 @@ export const Politicians = React.memo(props => {
   }, []);
 
   return (
-    <TwitterPlot
-      twitterUsers={twitterUsers}
-      twitterPoints={twitterPoints}
-      is_3D={true}
-    ></TwitterPlot>
+    <Switch>
+      <Route exact path={path}>
+        {/* <Link to={`${url}/ble`}>Blle</Link> */}
+        <TwitterPlot
+          twitterUsers={twitterUsers}
+          twitterPoints={twitterPoints}
+          is_3D={true}
+        ></TwitterPlot>
+      </Route>
+      <Route path={`${path}/:username`}>
+        <PoliticianDetail></PoliticianDetail>
+      </Route>
+    </Switch>
   );
-});
+}
