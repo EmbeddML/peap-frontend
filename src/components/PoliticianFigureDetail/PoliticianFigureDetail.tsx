@@ -15,5 +15,7 @@ export function PoliticianFigureDetail({
 }: PoliticianFigureDetailProps) {
   const { username } = useParams<{ username: string }>();
 
-  return <h3> Działa {username}</h3>;
+  return (
+    <h3> Działa {username}</h3>
+  );
 }

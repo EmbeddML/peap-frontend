@@ -1,12 +1,21 @@
-  
-export class TwitterPoint2D {
-    constructor(public twitterName: string, public x: number, public y: number) {}
-}
-
-export class TwitterPoint3D {
-    constructor(public twitterName: string, public x: number, public y: number, public z: number) {}
-}
 
 export class TwitterUser {
-    constructor(public twitterName: string, public party: string, public coalition: string) {}
+  constructor(
+    public photo: string,
+    public username: string,
+    public firstname: string,
+    public surname: string,
+    public party: string,
+    public coalition: string,
+    public role: string,
+    public tweetsCount: number,
+    public x_graph2d: number,
+    public y_graph2d: number,
+    public x_graph3d: number,
+    public y_graph3d: number,
+    public z_graph3d: number,
+    public cluster_dbscan_id: number,
+    public cluster_kmeans_id: number,
+    public cluster_pam_id: number
+  ) {}
 }
