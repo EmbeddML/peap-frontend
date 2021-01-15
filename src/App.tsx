@@ -10,8 +10,8 @@ import {
 } from "react-router-dom";
 import styled from "styled-components";
 import { Politicians } from "./components/Politicians";
-import { MainBar } from "./components/MainBar";
-import { Sidebar } from "./components/Sidebar";
+import { MainBar } from "./components/core/MainBar";
+import { Sidebar } from "./components/core/Sidebar";
 
 const GridAppBar = styled(Grid)`
   flex: 0 0 auto;
@@ -49,7 +49,7 @@ function App() {
           </GridAppBar>
         </ClickAwayListener>
 
-        <GridContent item>
+        <GridContent container>
           <Switch>
             <Route path="/politicians">
               <Politicians />

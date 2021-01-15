@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Plot, { Figure } from "react-plotly.js";
-import { TwitterUser } from "../models/model";
+import { TwitterUser } from "../../models/model";
 import { DataFrame } from "data-forge";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { Data } from "plotly.js";
@@ -8,11 +8,11 @@ import { Data } from "plotly.js";
 interface TwitterPlotProps {
   twitterUsers: TwitterUser[];
   is_3D: boolean;
-  clusteringType: string;
+  clusteringProperty: string;
 }
 
 export const TwitterPlot = React.memo(
-  ({ twitterUsers, is_3D, clusteringType }: TwitterPlotProps) => {
+  ({ twitterUsers, is_3D, clusteringProperty }: TwitterPlotProps) => {
     const df = new DataFrame(twitterUsers);
 
     let { path } = useRouteMatch();
@@ -60,14 +60,15 @@ export const TwitterPlot = React.memo(
       history.push(`${path}/${username}`);
     }
 
-    const unique_cluster_ids = df
-      .getSeries(clusteringType)
+    const unique_cluster_values = df
+      .getSeries(clusteringProperty)
       .distinct()
       .toArray();
 
-    const plotData = unique_cluster_ids.map((cluster_id) => {
+    const plotData = unique_cluster_values.map((cluster_value, index) => {
       const df_f = df.where(
-        (user) => user[clusteringType as keyof TwitterUser] === cluster_id
+        (user) =>
+          user[clusteringProperty as keyof TwitterUser] === cluster_value
       );
       const customdata = df_f
         .subset([
@@ -77,10 +78,27 @@ export const TwitterPlot = React.memo(
           "party",
           "coalition",
           "role",
-          clusteringType,
+          "cluster_dbscan_id",
+          "cluster_kmeans_id",
+          "cluster_pam_id",
         ])
-        .renameSeries({ [clusteringType]: "cluster" })
         .toRows();
+
+      const symbols = [
+        "circle",
+        "square",
+        "diamond",
+        "cross",
+        "triangle",
+        "pentagon",
+        "hexagram",
+        "star",
+        "diamond",
+        "hourglass",
+        "bowtie",
+        "asterisk",
+        "hash",
+      ];
 
       return {
         x: df_f.getSeries("x_graph3d").toArray(),
@@ -91,7 +109,11 @@ export const TwitterPlot = React.memo(
         type: "scatter3d",
         mode: "markers",
         showlegend: true,
-        name: `Cluster ${cluster_id}`,
+        marker: {
+          size: df_f.getSeries("tweetsCount").toArray(),
+          // symbol: Array(df_f.count()).fill(symbols[index]),
+        },
+        name: `Cluster ${cluster_value}`,
         hovertext: "",
         hovertemplate: `
           <b>%{customdata[0]}</b>
@@ -100,6 +122,8 @@ export const TwitterPlot = React.memo(
           <br>%{customdata[4]}
           <br>%{customdata[5]}
           <br>%{customdata[6]}
+          <br>%{customdata[7]}
+          <br>%{customdata[8]}
           <extra></extra>`,
       } as Data;
     });

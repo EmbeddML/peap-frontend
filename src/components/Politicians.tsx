@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { TwitterUser } from "../models/model";
 import { api } from "../api/api";
-import { TwitterPlot } from "./TwitterPlot";
+import { TwitterPlot } from "./shared/TwitterPlot";
 import { Route, Switch, useRouteMatch } from "react-router-dom";
 import {
-  PoliticianFigureDetail,
-  PoliticianFigureDetailType,
-} from "./PoliticianFigureDetail/PoliticianFigureDetail";
+  PoliticalFigureDetail,
+  PoliticalFigureDetailType,
+} from "./PoliticalFigureDetail";
 
 export function Politicians() {
   let { path } = useRouteMatch();
@@ -17,19 +17,19 @@ export function Politicians() {
   }, []);
 
   return (
-    <Switch>
-      <Route exact path={path}>
-        <TwitterPlot
-          twitterUsers={twitterUsers}
-          is_3D={true}
-          clusteringType={"cluster_dbscan_id"}
-        ></TwitterPlot>
-      </Route>
-      <Route path={`${path}/:username`}>
-        <PoliticianFigureDetail
-          politicianFigureDetailType={PoliticianFigureDetailType.Politician}
-        ></PoliticianFigureDetail>
-      </Route>
-    </Switch>
+      <Switch>
+        <Route exact path={path}>
+          <TwitterPlot
+            twitterUsers={twitterUsers}
+            is_3D={true}
+            clusteringProperty={"cluster_dbscan_id"}
+          ></TwitterPlot>
+        </Route>
+        <Route path={`${path}/:username`}>
+          <PoliticalFigureDetail
+            politicalFigureDetailType={PoliticalFigureDetailType.Politician}
+          ></PoliticalFigureDetail>
+        </Route>
+      </Switch>
   );
 }
