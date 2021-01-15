@@ -3,11 +3,14 @@ import { TwitterPoint3D, TwitterUser } from "../models/model";
 import { api } from "../api/api";
 import { forkJoin } from "rxjs";
 import { TwitterPlot } from "./TwitterPlot";
-import { Link, Route, Switch, useRouteMatch } from "react-router-dom";
-import { PoliticianDetail } from "./PoliticianDetail";
+import { Route, Switch, useRouteMatch } from "react-router-dom";
+import {
+  PoliticianFigureDetail,
+  PoliticianFigureDetailType,
+} from "./PoliticianFigureDetail";
 
 export function Politicians() {
-  let { path, url } = useRouteMatch();
+  let { path } = useRouteMatch();
   const [twitterUsers, setTwitterUsers] = useState<TwitterUser[]>([]);
   const [twitterPoints, setTwitterPoints] = useState<TwitterPoint3D[]>([]);
 
@@ -24,7 +27,6 @@ export function Politicians() {
   return (
     <Switch>
       <Route exact path={path}>
-        {/* <Link to={`${url}/ble`}>Blle</Link> */}
         <TwitterPlot
           twitterUsers={twitterUsers}
           twitterPoints={twitterPoints}
@@ -32,7 +34,9 @@ export function Politicians() {
         ></TwitterPlot>
       </Route>
       <Route path={`${path}/:username`}>
-        <PoliticianDetail></PoliticianDetail>
+        <PoliticianFigureDetail
+          politicianFigureDetailType={PoliticianFigureDetailType.Politician}
+        ></PoliticianFigureDetail>
       </Route>
     </Switch>
   );

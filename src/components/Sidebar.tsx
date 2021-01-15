@@ -9,16 +9,15 @@ import {
 } from "@material-ui/core";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
-import PersonAddIcon from '@material-ui/icons/PersonAdd';
+import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import GroupWorkIcon from '@material-ui/icons/GroupWork';
-import AccountTreeIcon from '@material-ui/icons/AccountTree';
+import GroupWorkIcon from "@material-ui/icons/GroupWork";
+import AccountTreeIcon from "@material-ui/icons/AccountTree";
 
-const StyledDrawer = styled(Drawer)`
-  width: drawerWidth;
-  flex-shrink: 0;
+const StyledPaper = styled.div`
+  width: 240px;
 `;
 
 const DrawerHeader = styled.div`
@@ -26,6 +25,7 @@ const DrawerHeader = styled.div`
   align-items: center;
   min-height: 64px;
   justify-content: flex-end;
+  padding: 8px;
 `;
 
 export interface SidebarProps {
@@ -44,11 +44,12 @@ export const Sidebar = React.forwardRef((props: SidebarProps, ref) => {
   };
 
   return (
-    <StyledDrawer
+    <Drawer
       ref={ref}
-      variant="persistent"
+      variant="temporary"
       anchor="left"
       open={props.sidebarOpen}
+      PaperProps={{ component: StyledPaper }}
     >
       <DrawerHeader>
         <IconButton onClick={props.handleSidebarClose}>
@@ -113,6 +114,6 @@ export const Sidebar = React.forwardRef((props: SidebarProps, ref) => {
           <ListItemText primary="You" />
         </ListItem>
       </List>
-    </StyledDrawer>
+    </Drawer>
   );
 });
