@@ -2,12 +2,15 @@ import { DataFrame } from "data-forge";
 import React, { useState } from "react";
 import Plot, { Figure } from "react-plotly.js";
 
-interface BarPlotProps {
-  topicData: [string, number][];
+export type BarPlotData = [string, number]
+
+export interface BarPlotProps {
+  plotData: BarPlotData[];
+  onColumnClick?: (event: Readonly<Plotly.PlotMouseEvent>) => void;
 }
 
-export const BarPlot = ({ topicData }: BarPlotProps) => {
-  const df = new DataFrame(topicData).renameSeries({'0': "topic", '1': "value"});
+export const BarPlot = ({ plotData, onColumnClick = () => {} }: BarPlotProps) => {
+  const df = new DataFrame(plotData).renameSeries({'0': "label", '1': "value"});
 
   const [plotState, setPlotState] = useState<Readonly<Figure>>({
     data: [],
@@ -20,15 +23,11 @@ export const BarPlot = ({ topicData }: BarPlotProps) => {
       autosize: true,
       margin: { l: 32, r: 32, b: 24, t: 16, pad: 0 },
       xaxis: {
-        dtick: 1
+        tickmode: "linear"  // Show all labels
       }
     },
     frames: [],
   } as Readonly<Figure>);
-
-  function onColumnClick(event: any) {
-    console.log(event);
-  }
 
   return (
     <Plot
@@ -37,7 +36,7 @@ export const BarPlot = ({ topicData }: BarPlotProps) => {
       onClick={onColumnClick}
       data={[
         {
-          x: df.getSeries("topic").toArray(),
+          x: df.getSeries("label").toArray(),
           y: df.getSeries("value").toArray(),
           type: "bar"
         },

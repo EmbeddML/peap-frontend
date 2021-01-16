@@ -4,6 +4,8 @@ import styled from "styled-components";
 import { api } from "../api/api";
 import { useEffect, useState } from "react";
 import { BarPlot } from "./shared/BarPlot";
+import { Sentiment, Topic } from "../models/types";
+import { forkJoin } from "rxjs";
 
 const StyledContainer = styled(Grid)`
   padding: 8px;
@@ -35,10 +37,26 @@ export function PoliticalFigureDetail({
 }: PoliticalFigureDetailProps) {
   const { username } = useParams<{ username: string }>();
 
-  const [topicData, setTopicData] = useState<[string, number][]>([]);
+  const [topicData, setTopicData] = useState<Topic[]>([]);
+  const [sentimentData, setSentimentData] = useState<Sentiment[]>([]);
+
+  function onTopicColumnClick(event: Readonly<Plotly.PlotMouseEvent>) {
+    console.log(event);
+  }
+
+  function onSentimentColumnClick(event: Readonly<Plotly.PlotMouseEvent>) {
+    console.log(event);
+  }
 
   useEffect(() => {
-    api.getTopicsForUser(username).subscribe(setTopicData);
+    forkJoin({
+      topics: api.getTopicsForUser(username),
+      sentiments: api.getSentimentsForUser(username)
+    })
+    .subscribe(({topics, sentiments}) => {
+      setTopicData(topics);
+      setSentimentData(sentiments)
+    });
   }, [username]);
 
   return (
@@ -58,7 +76,7 @@ export function PoliticalFigureDetail({
               <Typography variant="h6" align="center">
                 Topic analysis
               </Typography>
-              <BarPlot {...{ topicData }}></BarPlot>
+              <BarPlot plotData={topicData} onColumnClick={onTopicColumnClick}></BarPlot>
             </StyledPaper>
           </StyledItem>
         </Grow>
@@ -68,7 +86,7 @@ export function PoliticalFigureDetail({
               <Typography variant="h6" align="center">
                 Sentiment analysis
               </Typography>
-              <BarPlot {...{ topicData }}></BarPlot>
+              <BarPlot {...{ plotData: sentimentData }} onColumnClick={onSentimentColumnClick}></BarPlot>
             </StyledPaper>
           </StyledItem>
         </Grow>
