@@ -7,7 +7,9 @@ import { BarPlot, BarPlotType } from "./shared/BarPlot";
 import { Sentiment, Topic } from "../models/types";
 import { forkJoin } from "rxjs";
 import { WordCloud } from "./shared/WordCloud";
-import { Word } from "../models/model";
+import { TwitterUser, Word } from "../models/model";
+import { TwitterPlot } from "./shared/TwitterPlot";
+
 
 const StyledContainer = styled(Grid)`
   padding: 8px;
@@ -32,10 +34,16 @@ export enum PoliticalFigureDetailType {
 
 export interface PoliticalFigureDetailProps {
   politicalFigureDetailType: PoliticalFigureDetailType;
+  twitterUsers: TwitterUser[];
+  is_3D: boolean;
+  clusteringProperty: string;
 }
 
 export function PoliticalFigureDetail({
   politicalFigureDetailType,
+  twitterUsers,
+  is_3D,
+  clusteringProperty,
 }: PoliticalFigureDetailProps) {
   const { username } = useParams<{ username: string }>();
 
@@ -56,11 +64,10 @@ export function PoliticalFigureDetail({
       topics: api.getTopicsForUser(username),
       sentiments: api.getSentimentsForUser(username),
       words: api.getWordsForUser(username),
-    })
-    .subscribe(({topics, sentiments, words}) => {
+    }).subscribe(({ topics, sentiments, words }) => {
       setTopicData(topics);
-      setSentimentData(sentiments)
-      setWordsData(words)
+      setSentimentData(sentiments);
+      setWordsData(words);
     });
   }, [username]);
 
@@ -76,27 +83,35 @@ export function PoliticalFigureDetail({
         spacing={0}
       >
         <Grow in={true}>
-          <StyledItem item xs={12} sm={6} lg={4}>
+          <StyledItem item xs={12} md={6} xl={4}>
             <StyledPaper elevation={1}>
               <Typography variant="h6" align="center">
                 Topic analysis
               </Typography>
-              <BarPlot plotData={topicData} onColumnClick={onTopicColumnClick} barPlotType={BarPlotType.Topic}></BarPlot>
+              <BarPlot
+                plotData={topicData}
+                onColumnClick={onTopicColumnClick}
+                barPlotType={BarPlotType.Topic}
+              ></BarPlot>
             </StyledPaper>
           </StyledItem>
         </Grow>
         <Grow in={true}>
-          <StyledItem item xs={12} sm={6} lg={4}>
+          <StyledItem item xs={12} md={6} xl={4}>
             <StyledPaper elevation={1}>
               <Typography variant="h6" align="center">
                 Sentiment analysis
               </Typography>
-              <BarPlot plotData={sentimentData} onColumnClick={onSentimentColumnClick} barPlotType={BarPlotType.Sentiment}></BarPlot>
+              <BarPlot
+                plotData={sentimentData}
+                onColumnClick={onSentimentColumnClick}
+                barPlotType={BarPlotType.Sentiment}
+              ></BarPlot>
             </StyledPaper>
           </StyledItem>
         </Grow>
         <Grow in={true}>
-          <StyledItem item xs={12} md={6}>
+          <StyledItem item xs={12} md={6} xl={4}>
             <StyledPaper elevation={1}>
               <Typography variant="h6" align="center">
                 Words analysis
@@ -105,8 +120,8 @@ export function PoliticalFigureDetail({
             </StyledPaper>
           </StyledItem>
         </Grow>
-        <Grow in={true}>
-          <StyledItem item xs={12} md={6}>
+        {/* <Grow in={true}>
+          <StyledItem item xs={12} md={6} xl={4}>
             <StyledPaper elevation={1}>
               <p>asdasd</p>
               <p>asdasd</p>
@@ -114,14 +129,16 @@ export function PoliticalFigureDetail({
               <p>asdasd</p>
             </StyledPaper>
           </StyledItem>
-        </Grow>
+        </Grow> */}
         <Grow in={true}>
-          <StyledItem item xs={12} md={6}>
+          <StyledItem item xs={12}>
             <StyledPaper elevation={1}>
-              <p>asdasd</p>
-              <p>asdasd</p>
-              <p>asdasd</p>
-              <p>asdasd</p>
+              <TwitterPlot
+                twitterUsers={twitterUsers}
+                is_3D={true}
+                clusteringProperty={"cluster_dbscan_id"}
+                selectedUsername={username}
+              ></TwitterPlot>
             </StyledPaper>
           </StyledItem>
         </Grow>

@@ -9,14 +9,28 @@ interface TwitterPlotProps {
   twitterUsers: TwitterUser[];
   is_3D: boolean;
   clusteringProperty: string;
+  selectedUsername?: string;
 }
 
 export const TwitterPlot = React.memo(
-  ({ twitterUsers, is_3D, clusteringProperty }: TwitterPlotProps) => {
+  ({
+    twitterUsers,
+    is_3D,
+    clusteringProperty,
+    selectedUsername = "",
+  }: TwitterPlotProps) => {
     const df = new DataFrame(twitterUsers);
 
-    let { path } = useRouteMatch();
+    let { path, url } = useRouteMatch();
     const history = useHistory();
+
+    let selectedUser: TwitterUser | null = null
+    if (selectedUsername) {
+      const df_user = df.where(user => user.username === selectedUsername)
+      if (df_user.count() > 0) {
+        selectedUser = df_user.first()
+      }
+    }
 
     const [plotState, setPlotState] = useState<Readonly<Figure>>({
       data: [],
@@ -50,6 +64,16 @@ export const TwitterPlot = React.memo(
             showspikes: false,
             zeroline: false,
           },
+          annotations: selectedUser ? [{
+            showarrow: false,
+            x: selectedUser.x_graph3d,
+            y: selectedUser.y_graph3d,
+            z: selectedUser.z_graph3d,
+            text: selectedUser.username,
+            xanchor: "left",
+            xshift: 40,
+            opacity: 1
+          }] : [],
         },
       },
       frames: [],
@@ -57,13 +81,31 @@ export const TwitterPlot = React.memo(
 
     function onPlotlyClick(event: any) {
       const username = event.points[0].text;
-      history.push(`${path}/${username}`);
+      
+      if (!selectedUser) {
+        history.push(`${path}/${username}`);
+      }
     }
 
     const unique_cluster_values = df
       .getSeries(clusteringProperty)
       .distinct()
       .toArray();
+
+    // const availableSymbols = [
+    //   "circle",
+    //   "square",
+    //   "diamond",
+    //   "cross",
+    //   "triangle",
+    //   "pentagon",
+    //   "hexagram",
+    //   "star",
+    //   "hourglass",
+    //   "bowtie",
+    //   "asterisk",
+    //   "hash",
+    // ];
 
     const plotData = unique_cluster_values.map((cluster_value, index) => {
       const df_f = df.where(
@@ -84,34 +126,23 @@ export const TwitterPlot = React.memo(
         ])
         .toRows();
 
-      const symbols = [
-        "circle",
-        "square",
-        "diamond",
-        "cross",
-        "triangle",
-        "pentagon",
-        "hexagram",
-        "star",
-        "diamond",
-        "hourglass",
-        "bowtie",
-        "asterisk",
-        "hash",
-      ];
-
+      const usernames = df_f.getSeries("username").toArray();
+      const symbols = usernames.map((username) =>
+        username === selectedUsername ? "diamond" : "circle"
+      );
       return {
         x: df_f.getSeries("x_graph3d").toArray(),
         y: df_f.getSeries("y_graph3d").toArray(),
         z: df_f.getSeries("z_graph3d").toArray(),
-        text: df_f.getSeries("username").toArray(),
+        text: usernames,
         customdata: customdata,
         type: "scatter3d",
         mode: "markers",
         showlegend: true,
         marker: {
+          opacity: 1,
           size: df_f.getSeries("tweetsCount").toArray(),
-          // symbol: Array(df_f.count()).fill(symbols[index]),
+          symbol: symbols,
         },
         name: `Cluster ${cluster_value}`,
         hovertext: "",

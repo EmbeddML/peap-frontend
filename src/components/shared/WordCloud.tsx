@@ -2,7 +2,6 @@ import React from "react";
 import ReactWordcloud, { MinMaxPair, Optional, Options } from "react-wordcloud";
 import styled from "styled-components";
 import { Word } from "../../models/model";
-import { Props as TippyProps } from 'tippy.js';
 
 export interface WordCloudProps {
   words: Word[];
@@ -21,7 +20,7 @@ export function WordCloud({ words }: WordCloudProps) {
     randomSeed: "42",
     enableOptimizations: true,
     padding: 2,
-    scale: "log",
+    scale: "sqrt",
   };
 
   return (

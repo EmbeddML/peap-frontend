@@ -33,7 +33,7 @@ export class DummyApi implements Api {
         (_) =>
           ({
             text: Math.random().toString(36).substring(7),
-            value: Math.floor(5 + Math.random() * 100),
+            value: Math.floor(15 + Math.random() * 1000),
           } as Word)
       )
     );

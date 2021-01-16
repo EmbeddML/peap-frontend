@@ -1,3 +1,4 @@
+import { Sentiment, Topic } from "./types";
 
 export class TwitterUser {
   constructor(
@@ -17,6 +18,17 @@ export class TwitterUser {
     public cluster_dbscan_id: number,
     public cluster_kmeans_id: number,
     public cluster_pam_id: number
+  ) {}
+}
+
+export class Tweet {
+  constructor(
+    public id: string,
+    public tweetLink: string,
+    public username: string,
+    public tweetText: string,
+    public topic: Topic,
+    public sentiment: Sentiment
   ) {}
 }
 

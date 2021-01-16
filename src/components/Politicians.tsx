@@ -28,6 +28,9 @@ export function Politicians() {
         <Route path={`${path}/:username`}>
           <PoliticalFigureDetail
             politicalFigureDetailType={PoliticalFigureDetailType.Politician}
+            twitterUsers={twitterUsers}
+            is_3D={true}
+            clusteringProperty={"cluster_dbscan_id"}
           ></PoliticalFigureDetail>
         </Route>
       </Switch>
