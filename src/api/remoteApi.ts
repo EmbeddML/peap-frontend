@@ -12,6 +12,9 @@ const TWITTER_POINTS_3D_LINK = `${BACKEND_API_URL}/point3d`;
 
 
 export class RemoteApi implements Api {
+  getWordsForUser(username: string): Observable<Sentiment[]> {
+    throw new Error("Method not implemented.");
+  }
   getSentimentsForUser(username: string): Observable<Sentiment[]> {
     throw new Error("Method not implemented.");
   }

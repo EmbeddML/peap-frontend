@@ -13,6 +13,7 @@ export interface Api {
   getTwitterUser(username: string): Observable<TwitterUser | undefined>;
   getTopicsForUser(username: string): Observable<Topic[]>;
   getSentimentsForUser(username: string): Observable<Sentiment[]>;
+  getWordsForUser(username: string): Observable<Sentiment[]>;
 }
 
 

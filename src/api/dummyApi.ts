@@ -4,6 +4,9 @@ import { Sentiment, Topic } from "../models/types";
 import { Api } from "./api";
 
 export class DummyApi implements Api {
+  getWordsForUser(username: string): Observable<Sentiment[]> {
+    throw new Error("Method not implemented.");
+  }
   getSentimentsForUser(username: string): Observable<Sentiment[]> {
     return of(
       ["negative", "neutral", "positive", "ambiguous"].map((value) => [

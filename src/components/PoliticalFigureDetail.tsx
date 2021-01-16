@@ -3,7 +3,7 @@ import { Fade, Grid, Paper, Typography, Grow } from "@material-ui/core";
 import styled from "styled-components";
 import { api } from "../api/api";
 import { useEffect, useState } from "react";
-import { BarPlot } from "./shared/BarPlot";
+import { BarPlot, BarPlotType } from "./shared/BarPlot";
 import { Sentiment, Topic } from "../models/types";
 import { forkJoin } from "rxjs";
 
@@ -86,7 +86,7 @@ export function PoliticalFigureDetail({
               <Typography variant="h6" align="center">
                 Sentiment analysis
               </Typography>
-              <BarPlot {...{ plotData: sentimentData }} onColumnClick={onSentimentColumnClick}></BarPlot>
+              <BarPlot plotData={sentimentData} onColumnClick={onSentimentColumnClick} barPlotType={BarPlotType.Sentiment}></BarPlot>
             </StyledPaper>
           </StyledItem>
         </Grow>
