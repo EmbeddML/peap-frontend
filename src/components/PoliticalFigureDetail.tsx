@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import { BarPlot, BarPlotType } from "./shared/BarPlot";
 import { Sentiment, Topic } from "../models/types";
 import { forkJoin } from "rxjs";
+import { WordCloud } from "./shared/WordCloud";
+import { Word } from "../models/model";
 
 const StyledContainer = styled(Grid)`
   padding: 8px;
@@ -39,6 +41,7 @@ export function PoliticalFigureDetail({
 
   const [topicData, setTopicData] = useState<Topic[]>([]);
   const [sentimentData, setSentimentData] = useState<Sentiment[]>([]);
+  const [wordsData, setWordsData] = useState<Word[]>([]);
 
   function onTopicColumnClick(event: Readonly<Plotly.PlotMouseEvent>) {
     console.log(event);
@@ -51,11 +54,13 @@ export function PoliticalFigureDetail({
   useEffect(() => {
     forkJoin({
       topics: api.getTopicsForUser(username),
-      sentiments: api.getSentimentsForUser(username)
+      sentiments: api.getSentimentsForUser(username),
+      words: api.getWordsForUser(username),
     })
-    .subscribe(({topics, sentiments}) => {
+    .subscribe(({topics, sentiments, words}) => {
       setTopicData(topics);
       setSentimentData(sentiments)
+      setWordsData(words)
     });
   }, [username]);
 
@@ -76,7 +81,7 @@ export function PoliticalFigureDetail({
               <Typography variant="h6" align="center">
                 Topic analysis
               </Typography>
-              <BarPlot plotData={topicData} onColumnClick={onTopicColumnClick}></BarPlot>
+              <BarPlot plotData={topicData} onColumnClick={onTopicColumnClick} barPlotType={BarPlotType.Topic}></BarPlot>
             </StyledPaper>
           </StyledItem>
         </Grow>
@@ -93,10 +98,10 @@ export function PoliticalFigureDetail({
         <Grow in={true}>
           <StyledItem item xs={12} md={6}>
             <StyledPaper elevation={1}>
-              <p>asdasd</p>
-              <p>asdasd</p>
-              <p>asdasd</p>
-              <p>asdasd</p>
+              <Typography variant="h6" align="center">
+                Words analysis
+              </Typography>
+              <WordCloud words={wordsData}></WordCloud>
             </StyledPaper>
           </StyledItem>
         </Grow>

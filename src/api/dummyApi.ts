@@ -1,21 +1,9 @@
 import { Observable, of } from "rxjs";
-import { TwitterUser } from "../models/model";
+import { TwitterUser, Word } from "../models/model";
 import { Sentiment, Topic } from "../models/types";
 import { Api } from "./api";
 
 export class DummyApi implements Api {
-  getWordsForUser(username: string): Observable<Sentiment[]> {
-    throw new Error("Method not implemented.");
-  }
-  getSentimentsForUser(username: string): Observable<Sentiment[]> {
-    return of(
-      ["negative", "neutral", "positive", "ambiguous"].map((value) => [
-        value,
-        Math.floor(5 + Math.random() * 40),
-      ])
-    );
-  }
-
   public users: TwitterUser[] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(
     (value: number) =>
       new TwitterUser(
@@ -38,9 +26,32 @@ export class DummyApi implements Api {
       )
   );
 
+  getWordsForUser(username: string): Observable<Word[]> {
+    const wordsCount = Math.floor(50 + Math.random() * 40);
+    return of(
+      Array(wordsCount).fill(0).map(
+        (_) =>
+          ({
+            text: Math.random().toString(36).substring(7),
+            value: Math.floor(5 + Math.random() * 100),
+          } as Word)
+      )
+    );
+  }
+  getSentimentsForUser(username: string): Observable<Sentiment[]> {
+    return of(
+      ["negative", "neutral", "positive", "ambiguous"].map((value) => [
+        value,
+        Math.floor(5 + Math.random() * 40),
+      ])
+    );
+  }
+
+  
+
   getTopicsForUser(username: string): Observable<Topic[]> {
     return of(
-      Array.from(Array(15).keys()).map((value) => [
+      Array.from(Array(10).keys()).map((value) => [
         value.toString(),
         Math.floor(5 + Math.random() * 40),
       ])

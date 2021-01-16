@@ -19,3 +19,8 @@ export class TwitterUser {
     public cluster_pam_id: number
   ) {}
 }
+
+export interface Word {
+  text: string,
+  value: number
+}
