@@ -1,3 +1,3 @@
 
-export type Topic = [string, number]
-export type Sentiment = [string, number]
+export type TopicData = [string, number]
+export type SentimentData = [string, number]

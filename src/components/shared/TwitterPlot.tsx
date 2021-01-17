@@ -24,11 +24,11 @@ export const TwitterPlot = React.memo(
     let { path } = useRouteMatch();
     const history = useHistory();
 
-    let selectedUser: TwitterUser | null = null
+    let selectedUser: TwitterUser | null = null;
     if (selectedUsername) {
-      const df_user = df.where(user => user.username === selectedUsername)
+      const df_user = df.where((user) => user.username === selectedUsername);
       if (df_user.count() > 0) {
-        selectedUser = df_user.first()
+        selectedUser = df_user.first();
       }
     }
 
@@ -64,16 +64,20 @@ export const TwitterPlot = React.memo(
             showspikes: false,
             zeroline: false,
           },
-          annotations: selectedUser ? [{
-            showarrow: false,
-            x: selectedUser.x_graph3d,
-            y: selectedUser.y_graph3d,
-            z: selectedUser.z_graph3d,
-            text: selectedUser.username,
-            xanchor: "left",
-            xshift: 40,
-            opacity: 1
-          }] : [],
+          annotations: selectedUser
+            ? [
+                {
+                  showarrow: false,
+                  x: selectedUser.x_graph3d,
+                  y: selectedUser.y_graph3d,
+                  z: selectedUser.z_graph3d,
+                  text: selectedUser.username,
+                  xanchor: "left",
+                  xshift: 40,
+                  opacity: 1,
+                },
+              ]
+            : [],
         },
       },
       frames: [],
@@ -81,7 +85,7 @@ export const TwitterPlot = React.memo(
 
     function onPlotlyClick(event: any) {
       const username = event.points[0].text;
-      
+
       if (!selectedUser) {
         history.push(`${path}/${username}`);
       }
@@ -141,10 +145,10 @@ export const TwitterPlot = React.memo(
         showlegend: true,
         marker: {
           opacity: 1,
-          size: df_f.getSeries("tweets_count").toArray(),
+          // size: df_f.getSeries("tweets_count").toArray(),
           symbol: symbols,
         },
-        name: `Cluster ${cluster_value}`,
+        name: cluster_value,
         hovertext: "",
         hovertemplate: `
           <b>%{customdata[0]}</b>
@@ -153,10 +157,10 @@ export const TwitterPlot = React.memo(
           <br>%{customdata[3]}
           <br>%{customdata[4]}
           <br>%{customdata[5]}
-          <br>%{customdata[6]}
-          <br>%{customdata[7]}
-          <br>%{customdata[8]}
           <extra></extra>`,
+        // <br>%{customdata[6]}
+        // <br>%{customdata[7]}
+        // <br>%{customdata[8]}
       } as Data;
     });
 
@@ -166,7 +170,7 @@ export const TwitterPlot = React.memo(
         // onUpdate={(figure) => setPlotState(figure)}  // CAUSES INFINITE LOOP
         onClick={onPlotlyClick}
         data={plotData}
-        config={{ displayModeBar: false, responsive: true}}
+        config={{ displayModeBar: false, responsive: true }}
         style={{ width: "100%", height: "100%" }}
         useResizeHandler
         layout={plotState.layout}

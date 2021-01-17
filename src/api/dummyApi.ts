@@ -1,9 +1,12 @@
 import { Observable, of } from "rxjs";
 import { Tweet, TwitterUser, Word } from "../models/model";
-import { Sentiment, Topic } from "../models/types";
+import { SentimentData, TopicData } from "../models/types";
 import { Api } from "./api";
 
 export class DummyApi implements Api {
+  getPhotoUrlForUser(username: string): Observable<string> {
+    throw new Error("Method not implemented.");
+  }
   public users: TwitterUser[] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(
     (value: number) =>
       new TwitterUser(
@@ -20,7 +23,8 @@ export class DummyApi implements Api {
         value + Math.floor(Math.random() * 3),
         value % 3,
         value % 3,
-        value % 3
+        value % 3,
+        ""
       )
   );
 
@@ -93,7 +97,7 @@ export class DummyApi implements Api {
         )
     );
   }
-  getSentimentsForUser(username: string): Observable<Sentiment[]> {
+  getSentimentsForUser(username: string): Observable<SentimentData[]> {
     return of(
       ["negative", "neutral", "positive", "ambiguous"].map((value) => [
         value,
@@ -102,7 +106,7 @@ export class DummyApi implements Api {
     );
   }
 
-  getTopicsForUser(username: string): Observable<Topic[]> {
+  getTopicsForUser(username: string): Observable<TopicData[]> {
     return of(
       Array.from(Array(10).keys()).map((value) => [
         value.toString(),

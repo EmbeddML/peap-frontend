@@ -1,8 +1,6 @@
-import { Observable, of } from "rxjs";
-import { fromFetch } from "rxjs/fetch";
-import { map, switchMap } from "rxjs/operators";
+import { Observable } from "rxjs";
 import { Tweet, TwitterUser, Word } from "../models/model";
-import { Sentiment, Topic } from "../models/types";
+import { SentimentData, TopicData } from "../models/types";
 import { DummyApi } from "./dummyApi";
 import { RemoteApi } from "./remoteApi";
 
@@ -11,10 +9,11 @@ const USE_DUMMY_API = JSON.parse(process.env.REACT_APP_USE_DUMMY_API!);
 export interface Api {
   getAllTwitterUsers(): Observable<TwitterUser[]>;
   getTwitterUser(username: string): Observable<TwitterUser | undefined>;
-  getTopicsForUser(username: string): Observable<Topic[]>;
-  getSentimentsForUser(username: string): Observable<Sentiment[]>;
+  getTopicsForUser(username: string): Observable<TopicData[]>;
+  getSentimentsForUser(username: string): Observable<SentimentData[]>;
   getWordsForUser(username: string): Observable<Word[]>;
   getTweetsForUser(username: string): Observable<Tweet[]>;
+  getPhotoUrlForUser(username: string): Observable<string>;
 }
 
 

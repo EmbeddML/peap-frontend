@@ -20,7 +20,8 @@ export function WordCloud({ words }: WordCloudProps) {
     randomSeed: "42",
     enableOptimizations: true,
     padding: 2,
-    scale: "sqrt",
+    scale: "log",
+    fontSizes: [10, 60] as MinMaxPair
   };
 
   return (

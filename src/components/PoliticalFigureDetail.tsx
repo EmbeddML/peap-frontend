@@ -5,12 +5,11 @@ import { api } from "../api/api";
 import { useEffect, useState } from "react";
 import { BarPlot, BarPlotType } from "./shared/BarPlot";
 import { PoliticalFigureDescription } from "./shared/PoliticalFigureDescription";
-import { Sentiment, Topic } from "../models/types";
+import { SentimentData, TopicData } from "../models/types";
 import { forkJoin } from "rxjs";
 import { WordCloud } from "./shared/WordCloud";
 import { Tweet, TwitterUser, Word } from "../models/model";
 import { TwitterPlot } from "./shared/TwitterPlot";
-import { DataFrame } from "data-forge";
 import { TweetsList } from "./shared/TweetsList";
 
 const StyledContainer = styled(Grid)`
@@ -57,20 +56,32 @@ export function PoliticalFigureDetail({
   clusteringProperty,
 }: PoliticalFigureDetailProps) {
   const { username } = useParams<{ username: string }>();
-
-  const df = new DataFrame(twitterUsers);
-  let selectedUser: TwitterUser | null = null;
-  if (username) {
-    const df_user = df.where((user) => user.username === username);
-    if (df_user.count() > 0) {
-      selectedUser = df_user.first();
-    }
-  }
-
-  const [topicData, setTopicData] = useState<Topic[]>([]);
-  const [sentimentData, setSentimentData] = useState<Sentiment[]>([]);
+  const [selectedUser, setSelectedUser] = useState<TwitterUser | null>();
+  const [topicData, setTopicData] = useState<TopicData[]>([]);
+  const [sentimentData, setSentimentData] = useState<SentimentData[]>([]);
   const [wordsData, setWordsData] = useState<Word[]>([]);
   const [tweetsData, setTweetsData] = useState<Tweet[]>([]);
+
+  useEffect(() => {
+    forkJoin({
+      user: api.getTwitterUser(username),
+      userPhotoUrl: api.getPhotoUrlForUser(username),
+      topics: api.getTopicsForUser(username),
+      sentiments: api.getSentimentsForUser(username),
+      words: api.getWordsForUser(username),
+      tweets: api.getTweetsForUser(username),
+    }).subscribe(({ user, userPhotoUrl, topics, sentiments, words, tweets }) => {
+      if (user) {
+        user.photoUrl = userPhotoUrl
+        setSelectedUser(user) 
+      };
+      setTopicData(topics);
+      setSentimentData(sentiments);
+      setWordsData(words);
+      setTweetsData(tweets);
+    });
+  }, [username]);
+
 
   function onTopicColumnClick(event: Readonly<Plotly.PlotMouseEvent>) {
     console.log(event);
@@ -80,19 +91,7 @@ export function PoliticalFigureDetail({
     console.log(event);
   }
 
-  useEffect(() => {
-    forkJoin({
-      topics: api.getTopicsForUser(username),
-      sentiments: api.getSentimentsForUser(username),
-      words: api.getWordsForUser(username),
-      tweets: api.getTweetsForUser(username),
-    }).subscribe(({ topics, sentiments, words, tweets }) => {
-      setTopicData(topics);
-      setSentimentData(sentiments);
-      setWordsData(words);
-      setTweetsData(tweets);
-    });
-  }, [username]);
+
 
   return (
     <Fade in={true}>
@@ -161,7 +160,7 @@ export function PoliticalFigureDetail({
                 <TwitterPlot
                   twitterUsers={twitterUsers}
                   is_3D={true}
-                  clusteringProperty={"cluster_dbscan_id"}
+                  clusteringProperty={"coalition"}
                   selectedUsername={username}
                 ></TwitterPlot>
               </PlotPaper>

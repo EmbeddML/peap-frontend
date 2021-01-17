@@ -36,9 +36,9 @@ export function PoliticalFigureDescription(
 
           <Grid container justify="center">
             <StyledAvatar
-              variant="square"
               alt="avatar"
               style={{backgroundColor: green[500]}}
+              src={politicalFigureData.photoUrl}
             >
               {politicalFigureData.username}
             </StyledAvatar>
@@ -49,14 +49,18 @@ export function PoliticalFigureDescription(
           <Grid container justify="center">
             <Grid
               container
+              item
               xs={11}
-              sm={6}
+              sm={8}
               md={11}
-              lg={6}
+              lg={10}
               justify="space-between"
               wrap="nowrap"
             >
               <Grid item>
+                <Typography variant="body1" align="left">
+                  <b>Username:</b>
+                </Typography>
                 <Typography variant="body1" align="left">
                   <b>Name:</b>
                 </Typography>
@@ -74,6 +78,9 @@ export function PoliticalFigureDescription(
                 </Typography>
               </Grid>
               <Grid item>
+                <Typography variant="body1" align="right">
+                  {politicalFigureData.username}
+                </Typography>
                 <Typography variant="body1" align="right">
                   {politicalFigureData.name}
                 </Typography>

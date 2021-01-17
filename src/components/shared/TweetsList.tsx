@@ -2,6 +2,7 @@ import { Tweet } from "../../models/model";
 import { Tweet as TweetComponent } from "react-twitter-widgets";
 import { Divider, Grid, Typography } from "@material-ui/core";
 import styled from "styled-components";
+import { Fragment } from "react";
 
 const TweetContainer = styled(Grid)`
   flex: 1 1 auto;
@@ -18,7 +19,7 @@ export interface TweetsListProps {
 export function TweetsList({ tweets }: TweetsListProps) {
   const tweetOptions = {
     align: "center",
-    // cards: "hidden",
+    cards: "hidden",
     conversation: "none",
     // width: "100"
   };
@@ -32,7 +33,7 @@ export function TweetsList({ tweets }: TweetsListProps) {
       wrap="nowrap"
     >
       {tweets.map((tweet: Tweet, index: number, arr: Tweet[]) => (
-        <>
+        <Fragment key={tweet.id.toString()}>
           <Grid container justify="space-around">
             <div></div>
             <Typography variant="body2" align="center">
@@ -45,11 +46,11 @@ export function TweetsList({ tweets }: TweetsListProps) {
           </Grid>
 
           <TweetContainer item>
-            <TweetComponent tweetId={tweet.id} options={tweetOptions} />
+            <TweetComponent tweetId={tweet.id.toString()} options={tweetOptions} />
           </TweetContainer>
           {arr.length - 1 !== index && <Divider variant="middle"></Divider>}
           <br />
-        </>
+        </Fragment>
       ))}
     </StyledGrid>
   );

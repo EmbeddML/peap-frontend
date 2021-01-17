@@ -1,4 +1,4 @@
-import { Sentiment, Topic } from "./types";
+import { TopicData } from "./types";
 
 export class TwitterUser {
   constructor(
@@ -15,7 +15,8 @@ export class TwitterUser {
     public z_graph3d: number,
     public cluster_dbscan_id: number,
     public cluster_kmeans_id: number,
-    public cluster_pam_id: number
+    public cluster_pam_id: number,
+    public photoUrl: string
   ) {}
 }
 
@@ -25,7 +26,7 @@ export class Tweet {
     public tweetLink: string,
     public username: string,
     public tweetText: string,
-    public topic: Topic,
+    public topic: TopicData,
     public sentiment: string
   ) {}
 }
@@ -48,4 +49,11 @@ export class Coalition {
 export interface Word {
   text: string,
   value: number
+}
+
+export enum Sentiment {
+  negative,
+  neutral,
+  positive,
+  ambiguous
 }
