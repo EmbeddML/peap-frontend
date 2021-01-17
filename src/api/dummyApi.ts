@@ -1,5 +1,5 @@
 import { Observable, of } from "rxjs";
-import { TwitterUser, Word } from "../models/model";
+import { Tweet, TwitterUser, Word } from "../models/model";
 import { Sentiment, Topic } from "../models/types";
 import { Api } from "./api";
 
@@ -24,16 +24,73 @@ export class DummyApi implements Api {
       )
   );
 
+  getTweetsForUser(username: string): Observable<Tweet[]> {
+    return of([
+      {
+        id: "403507374595399680",
+        tweetLink:
+          "https://twitter.com/krzysztofbosak/status/403507374595399680",
+        username: "krzysztofbosak",
+        tweetText:
+          "@lewysierpowy Trudno zapłacić za coś, za co nie przedstawiono żadnych roszczeń. Czekamy na papiery od HGW.",
+        topic: ["2", 0.5249956472920833],
+        sentiment: "negative",
+      },
+      {
+        id: "333685688065220608",
+        tweetLink:
+          "https://twitter.com/krzysztofbosak/status/333685688065220608",
+        username: "krzysztofbosak",
+        tweetText:
+          '@pobozy Nie wiem czy "gorszy". Trzeba by się pospierać co to jest "dobra demokracja". I wziąć poprawkę na poprzedzające okoliczności.',
+        topic: ["3", 0.275000009641284],
+        sentiment: "negative",
+      },
+      {
+        id: "380088584021098496",
+        tweetLink:
+          "https://twitter.com/krzysztofbosak/status/380088584021098496",
+        username: "krzysztofbosak",
+        tweetText:
+          "@KosJzef Dla bandziorków to co piszę to elementarz nie wart nawet wspominania, nie łudźmy się.",
+        topic: ["0", 0.1],
+        sentiment: "negative",
+      },
+      {
+        id: "448232347134353408",
+        tweetLink:
+          "https://twitter.com/krzysztofbosak/status/448232347134353408",
+        username: "krzysztofbosak",
+        tweetText:
+          "@jacekleski Na ile mi wiadomo, cały czas jest praktykującym katolikiem. Niemniej tt to chyba nie miejsce na religijne lustracje.",
+        topic: ["5",0.5249969239811266],
+        sentiment: "negative",
+      },
+      {
+        id: "1037656057194205184",
+        tweetLink:
+          "https://twitter.com/krzysztofbosak/status/1037656057194205184",
+        username: "krzysztofbosak",
+        tweetText:
+          "@SchwertnerPL @UdSC_gov_pl Na nagraniu widać pobicie 2 Polaków przez 4 Czeczenów a następnie pogoń za dziewczynką próbującą ich rozdzielić. Nagranie jest zbyt nieostre by rozstrzygnąć czy chłopiec miał coś w ręce. Dziewczynka zeznała że miał nóż",
+        topic: ["0", 0.30999937409572426],
+        sentiment: "negative",
+      },
+    ] as Tweet[]);
+  }
+
   getWordsForUser(username: string): Observable<Word[]> {
     const wordsCount = Math.floor(50 + Math.random() * 40);
     return of(
-      Array(wordsCount).fill(0).map(
-        (_) =>
-          ({
-            text: Math.random().toString(36).substring(7),
-            value: Math.floor(15 + Math.random() * 1000),
-          } as Word)
-      )
+      Array(wordsCount)
+        .fill(0)
+        .map(
+          (_) =>
+            ({
+              text: Math.random().toString(36).substring(7),
+              value: Math.floor(15 + Math.random() * 1000),
+            } as Word)
+        )
     );
   }
   getSentimentsForUser(username: string): Observable<Sentiment[]> {
@@ -44,8 +101,6 @@ export class DummyApi implements Api {
       ])
     );
   }
-
-  
 
   getTopicsForUser(username: string): Observable<Topic[]> {
     return of(

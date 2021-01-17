@@ -8,9 +8,10 @@ import { PoliticalFigureDescription } from "./shared/PoliticalFigureDescription"
 import { Sentiment, Topic } from "../models/types";
 import { forkJoin } from "rxjs";
 import { WordCloud } from "./shared/WordCloud";
-import { TwitterUser, Word } from "../models/model";
+import { Tweet, TwitterUser, Word } from "../models/model";
 import { TwitterPlot } from "./shared/TwitterPlot";
 import { DataFrame } from "data-forge";
+import { TweetsList } from "./shared/TweetsList";
 
 const StyledContainer = styled(Grid)`
   padding: 8px;
@@ -26,6 +27,14 @@ const StyledPaper = styled(Paper)`
   display: flex;
   flex-flow: column nowrap;
   overflow: hidden;
+`;
+
+const DynamicPaper = styled(StyledPaper)`
+  height: auto;
+`;
+
+const PlotPaper = styled(StyledPaper)`
+  height: 600px;
 `;
 
 export enum PoliticalFigureDetailType {
@@ -50,17 +59,18 @@ export function PoliticalFigureDetail({
   const { username } = useParams<{ username: string }>();
 
   const df = new DataFrame(twitterUsers);
-  let selectedUser: TwitterUser | null = null
-    if (username) {
-      const df_user = df.where(user => user.username === username)
-      if (df_user.count() > 0) {
-        selectedUser = df_user.first()
-      }
+  let selectedUser: TwitterUser | null = null;
+  if (username) {
+    const df_user = df.where((user) => user.username === username);
+    if (df_user.count() > 0) {
+      selectedUser = df_user.first();
     }
+  }
 
   const [topicData, setTopicData] = useState<Topic[]>([]);
   const [sentimentData, setSentimentData] = useState<Sentiment[]>([]);
   const [wordsData, setWordsData] = useState<Word[]>([]);
+  const [tweetsData, setTweetsData] = useState<Tweet[]>([]);
 
   function onTopicColumnClick(event: Readonly<Plotly.PlotMouseEvent>) {
     console.log(event);
@@ -75,82 +85,112 @@ export function PoliticalFigureDetail({
       topics: api.getTopicsForUser(username),
       sentiments: api.getSentimentsForUser(username),
       words: api.getWordsForUser(username),
-    }).subscribe(({ topics, sentiments, words }) => {
+      tweets: api.getTweetsForUser(username),
+    }).subscribe(({ topics, sentiments, words, tweets }) => {
       setTopicData(topics);
       setSentimentData(sentiments);
       setWordsData(words);
+      setTweetsData(tweets);
     });
   }, [username]);
 
   return (
     <Fade in={true}>
-      <StyledContainer
-        container
-        direction="row"
-        justify="center"
-        alignItems="center"
-        alignContent="flex-start"
-        wrap="wrap"
-        spacing={0}
-      >
-        <Grow in={true}>
-          <StyledItem item xs={12} md={6} xl={4}>
-            <StyledPaper elevation={1}>
-              <PoliticalFigureDescription politicalFigureData={selectedUser as TwitterUser}></PoliticalFigureDescription>
-            </StyledPaper>
-          </StyledItem>
-        </Grow>
-        <Grow in={true}>
-          <StyledItem item xs={12} md={6} xl={4}>
-            <StyledPaper elevation={1}>
-              <Typography variant="h6" align="center">
-                Topic analysis
-              </Typography>
-              <BarPlot
-                plotData={topicData}
-                onColumnClick={onTopicColumnClick}
-                barPlotType={BarPlotType.Topic}
-              ></BarPlot>
-            </StyledPaper>
-          </StyledItem>
-        </Grow>
-        <Grow in={true}>
-          <StyledItem item xs={12} md={6} xl={4}>
-            <StyledPaper elevation={1}>
-              <Typography variant="h6" align="center">
-                Sentiment analysis
-              </Typography>
-              <BarPlot
-                plotData={sentimentData}
-                onColumnClick={onSentimentColumnClick}
-                barPlotType={BarPlotType.Sentiment}
-              ></BarPlot>
-            </StyledPaper>
-          </StyledItem>
-        </Grow>
-        <Grow in={true}>
-          <StyledItem item xs={12} md={6} xl={4}>
-            <StyledPaper elevation={1}>
-              <Typography variant="h6" align="center">
-                Words analysis
-              </Typography>
-              <WordCloud words={wordsData}></WordCloud>
-            </StyledPaper>
-          </StyledItem>
-        </Grow>
-        <Grow in={true}>
-          <StyledItem item xs={12}>
-            <StyledPaper elevation={1}>
-              <TwitterPlot
-                twitterUsers={twitterUsers}
-                is_3D={true}
-                clusteringProperty={"cluster_dbscan_id"}
-                selectedUsername={username}
-              ></TwitterPlot>
-            </StyledPaper>
-          </StyledItem>
-        </Grow>
-      </StyledContainer>
+      <Grid container>
+        <StyledContainer
+          container
+          direction="row"
+          justify="center"
+          alignItems="center"
+          alignContent="flex-start"
+          wrap="wrap"
+          spacing={0}
+          xl={8}
+        >
+          <Grow in={true}>
+            <StyledItem item xs={11} md={6} xl={6}>
+              <StyledPaper elevation={1}>
+                <PoliticalFigureDescription
+                  politicalFigureData={selectedUser as TwitterUser}
+                ></PoliticalFigureDescription>
+              </StyledPaper>
+            </StyledItem>
+          </Grow>
+          <Grow in={true}>
+            <StyledItem item xs={11} md={6} xl={6}>
+              <StyledPaper elevation={1}>
+                <Typography variant="h6" align="center">
+                  Words analysis
+                </Typography>
+                <WordCloud words={wordsData}></WordCloud>
+              </StyledPaper>
+            </StyledItem>
+          </Grow>
+          <Grow in={true}>
+            <StyledItem item xs={11} md={6} xl={6}>
+              <StyledPaper elevation={1}>
+                <Typography variant="h6" align="center">
+                  Topic analysis
+                </Typography>
+                <BarPlot
+                  plotData={topicData}
+                  onColumnClick={onTopicColumnClick}
+                  barPlotType={BarPlotType.Topic}
+                ></BarPlot>
+              </StyledPaper>
+            </StyledItem>
+          </Grow>
+          <Grow in={true}>
+            <StyledItem item xs={11} md={6} xl={6}>
+              <StyledPaper elevation={1}>
+                <Typography variant="h6" align="center">
+                  Sentiment analysis
+                </Typography>
+                <BarPlot
+                  plotData={sentimentData}
+                  onColumnClick={onSentimentColumnClick}
+                  barPlotType={BarPlotType.Sentiment}
+                ></BarPlot>
+              </StyledPaper>
+            </StyledItem>
+          </Grow>
+
+          <Grow in={true}>
+            <StyledItem item xs={11} md={12} lg={8} xl={12}>
+              <PlotPaper elevation={1}>
+                <TwitterPlot
+                  twitterUsers={twitterUsers}
+                  is_3D={true}
+                  clusteringProperty={"cluster_dbscan_id"}
+                  selectedUsername={username}
+                ></TwitterPlot>
+              </PlotPaper>
+            </StyledItem>
+          </Grow>
+        </StyledContainer>
+        <StyledContainer
+          container
+          direction="row"
+          justify="center"
+          alignItems="center"
+          alignContent="flex-start"
+          wrap="wrap"
+          spacing={0}
+          xl={4}
+        >
+          <Grow in={true}>
+            <StyledItem item xs={11} md={8} lg={6} xl={12}>
+              <DynamicPaper elevation={1}>
+                <Typography variant="h6" align="center">
+                  Tweets
+                </Typography>
+                <br></br>
+                <TweetsList tweets={tweetsData} />
+              </DynamicPaper>
+            </StyledItem>
+          </Grow>
+        </StyledContainer>
+      </Grid>
     </Fade>
   );
 }

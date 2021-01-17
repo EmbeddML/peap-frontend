@@ -26,13 +26,13 @@ export class Tweet {
     public username: string,
     public tweetText: string,
     public topic: Topic,
-    public sentiment: Sentiment
+    public sentiment: string
   ) {}
 }
 
 export class Party {
   constructor(
-    public party_id: string,
+    public id: string,
     public name: string,
     public coalition: string
   ) {}
@@ -40,7 +40,7 @@ export class Party {
 
 export class Coalition {
   constructor(
-    public coalition_id: string,
+    public id: string,
     public name: string,
   ) {}
 }

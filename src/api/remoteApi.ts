@@ -1,7 +1,7 @@
 import { Observable, of } from "rxjs";
 import { fromFetch } from "rxjs/fetch";
 import { map, switchMap } from "rxjs/operators";
-import { TwitterUser, Word } from "../models/model";
+import { Tweet, TwitterUser, Word } from "../models/model";
 import { Sentiment, Topic } from "../models/types";
 import { Api } from "./api";
 
@@ -12,6 +12,9 @@ const TWITTER_POINTS_3D_LINK = `${BACKEND_API_URL}/point3d`;
 
 
 export class RemoteApi implements Api {
+  getTweetsForUser(username: string): Observable<Tweet[]> {
+    throw new Error("Method not implemented.");
+  }
   getWordsForUser(username: string): Observable<Word[]> {
     throw new Error("Method not implemented.");
   }

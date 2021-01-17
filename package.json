@@ -26,6 +26,7 @@
     "react-plotly.js": "^2.5.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.1",
+    "react-twitter-widgets": "^1.9.5",
     "react-wordcloud": "^1.2.7",
     "rxjs": "^6.6.3",
     "styled-components": "^5.2.1",

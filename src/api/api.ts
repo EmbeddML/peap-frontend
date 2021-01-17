@@ -1,7 +1,7 @@
 import { Observable, of } from "rxjs";
 import { fromFetch } from "rxjs/fetch";
 import { map, switchMap } from "rxjs/operators";
-import { TwitterUser, Word } from "../models/model";
+import { Tweet, TwitterUser, Word } from "../models/model";
 import { Sentiment, Topic } from "../models/types";
 import { DummyApi } from "./dummyApi";
 import { RemoteApi } from "./remoteApi";
@@ -14,6 +14,7 @@ export interface Api {
   getTopicsForUser(username: string): Observable<Topic[]>;
   getSentimentsForUser(username: string): Observable<Sentiment[]>;
   getWordsForUser(username: string): Observable<Word[]>;
+  getTweetsForUser(username: string): Observable<Tweet[]>;
 }
 
 

@@ -166,7 +166,7 @@ export const TwitterPlot = React.memo(
         // onUpdate={(figure) => setPlotState(figure)}  // CAUSES INFINITE LOOP
         onClick={onPlotlyClick}
         data={plotData}
-        config={{ displayModeBar: false, responsive: true }}
+        config={{ displayModeBar: false, responsive: true}}
         style={{ width: "100%", height: "100%" }}
         useResizeHandler
         layout={plotState.layout}
