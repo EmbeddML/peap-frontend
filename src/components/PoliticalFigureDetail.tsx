@@ -4,12 +4,13 @@ import styled from "styled-components";
 import { api } from "../api/api";
 import { useEffect, useState } from "react";
 import { BarPlot, BarPlotType } from "./shared/BarPlot";
+import { PoliticalFigureDescription } from "./shared/PoliticalFigureDescription";
 import { Sentiment, Topic } from "../models/types";
 import { forkJoin } from "rxjs";
 import { WordCloud } from "./shared/WordCloud";
 import { TwitterUser, Word } from "../models/model";
 import { TwitterPlot } from "./shared/TwitterPlot";
-
+import { DataFrame } from "data-forge";
 
 const StyledContainer = styled(Grid)`
   padding: 8px;
@@ -24,6 +25,7 @@ const StyledPaper = styled(Paper)`
   height: 400px;
   display: flex;
   flex-flow: column nowrap;
+  overflow: hidden;
 `;
 
 export enum PoliticalFigureDetailType {
@@ -46,6 +48,15 @@ export function PoliticalFigureDetail({
   clusteringProperty,
 }: PoliticalFigureDetailProps) {
   const { username } = useParams<{ username: string }>();
+
+  const df = new DataFrame(twitterUsers);
+  let selectedUser: TwitterUser | null = null
+    if (username) {
+      const df_user = df.where(user => user.username === username)
+      if (df_user.count() > 0) {
+        selectedUser = df_user.first()
+      }
+    }
 
   const [topicData, setTopicData] = useState<Topic[]>([]);
   const [sentimentData, setSentimentData] = useState<Sentiment[]>([]);
@@ -85,6 +96,13 @@ export function PoliticalFigureDetail({
         <Grow in={true}>
           <StyledItem item xs={12} md={6} xl={4}>
             <StyledPaper elevation={1}>
+              <PoliticalFigureDescription politicalFigureData={selectedUser as TwitterUser}></PoliticalFigureDescription>
+            </StyledPaper>
+          </StyledItem>
+        </Grow>
+        <Grow in={true}>
+          <StyledItem item xs={12} md={6} xl={4}>
+            <StyledPaper elevation={1}>
               <Typography variant="h6" align="center">
                 Topic analysis
               </Typography>
@@ -120,16 +138,6 @@ export function PoliticalFigureDetail({
             </StyledPaper>
           </StyledItem>
         </Grow>
-        {/* <Grow in={true}>
-          <StyledItem item xs={12} md={6} xl={4}>
-            <StyledPaper elevation={1}>
-              <p>asdasd</p>
-              <p>asdasd</p>
-              <p>asdasd</p>
-              <p>asdasd</p>
-            </StyledPaper>
-          </StyledItem>
-        </Grow> */}
         <Grow in={true}>
           <StyledItem item xs={12}>
             <StyledPaper elevation={1}>

@@ -2,14 +2,12 @@ import { Sentiment, Topic } from "./types";
 
 export class TwitterUser {
   constructor(
-    public photo: string,
     public username: string,
-    public firstname: string,
-    public surname: string,
+    public name: string,
     public party: string,
     public coalition: string,
     public role: string,
-    public tweetsCount: number,
+    public tweets_count: number,
     public x_graph2d: number,
     public y_graph2d: number,
     public x_graph3d: number,
@@ -29,6 +27,21 @@ export class Tweet {
     public tweetText: string,
     public topic: Topic,
     public sentiment: Sentiment
+  ) {}
+}
+
+export class Party {
+  constructor(
+    public party_id: string,
+    public name: string,
+    public coalition: string
+  ) {}
+}
+
+export class Coalition {
+  constructor(
+    public coalition_id: string,
+    public name: string,
   ) {}
 }
 

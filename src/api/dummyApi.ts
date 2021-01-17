@@ -7,10 +7,8 @@ export class DummyApi implements Api {
   public users: TwitterUser[] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(
     (value: number) =>
       new TwitterUser(
-        "testPhoto" + value,
         "testUsername" + value,
-        "testFirstname" + value,
-        "testSurname" + value,
+        "testName" + value,
         "testParty" + value,
         "testCoalition" + value,
         "testRole" + value,

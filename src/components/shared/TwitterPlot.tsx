@@ -21,7 +21,7 @@ export const TwitterPlot = React.memo(
   }: TwitterPlotProps) => {
     const df = new DataFrame(twitterUsers);
 
-    let { path, url } = useRouteMatch();
+    let { path } = useRouteMatch();
     const history = useHistory();
 
     let selectedUser: TwitterUser | null = null
@@ -115,11 +115,11 @@ export const TwitterPlot = React.memo(
       const customdata = df_f
         .subset([
           "username",
-          "firstname",
-          "surname",
+          "name",
           "party",
           "coalition",
           "role",
+          "tweets_count",
           "cluster_dbscan_id",
           "cluster_kmeans_id",
           "cluster_pam_id",
@@ -141,14 +141,15 @@ export const TwitterPlot = React.memo(
         showlegend: true,
         marker: {
           opacity: 1,
-          size: df_f.getSeries("tweetsCount").toArray(),
+          size: df_f.getSeries("tweets_count").toArray(),
           symbol: symbols,
         },
         name: `Cluster ${cluster_value}`,
         hovertext: "",
         hovertemplate: `
           <b>%{customdata[0]}</b>
-          <br>%{customdata[1]} %{customdata[2]}
+          <br>%{customdata[1]} 
+          <br>%{customdata[2]}
           <br>%{customdata[3]}
           <br>%{customdata[4]}
           <br>%{customdata[5]}
