@@ -26,15 +26,16 @@ export function PoliticalFigureDescription(
           justify="flex-start"
           alignItems="stretch"
           wrap="nowrap"
-          spacing={3}
+          spacing={1}
         >
           <Grid item>
             <Typography variant="h6" align="center">
-              Politician
+              {politicalFigureData.name}
             </Typography>
+            
           </Grid>
 
-          <Grid container justify="center">
+          <Grid container item justify="center">
             <StyledAvatar
               alt="avatar"
               style={{backgroundColor: green[500]}}
@@ -46,7 +47,7 @@ export function PoliticalFigureDescription(
           <Grid item>
             <Divider variant="middle"></Divider>
           </Grid>
-          <Grid container justify="center">
+          <Grid container item justify="center">
             <Grid
               container
               item
@@ -74,7 +75,7 @@ export function PoliticalFigureDescription(
                   <b>Role:</b>
                 </Typography>
                 <Typography variant="body1" align="left">
-                  <b>Tweets count:</b>
+                  <b>Overall tweets:</b>
                 </Typography>
               </Grid>
               <Grid item>
@@ -106,7 +107,9 @@ export function PoliticalFigureDescription(
     } else if (politicalFigureData instanceof Coalition) {
       return <h3>TODO</h3>;
     } else {
-      return <h3>ILLEGAL ARGUMENT {typeof politicalFigureData}</h3>;
+      return <Typography variant="h6" align="center">
+      Political figure
+    </Typography>;
     }
   }
 

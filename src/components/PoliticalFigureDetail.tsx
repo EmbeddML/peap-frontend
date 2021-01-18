@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { Fade, Grid, Paper, Typography, Grow } from "@material-ui/core";
 import styled from "styled-components";
 import { api } from "../api/api";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { BarPlot, BarPlotType } from "./shared/BarPlot";
 import { PoliticalFigureDescription } from "./shared/PoliticalFigureDescription";
 import { SentimentData, TopicData } from "../models/types";
@@ -11,6 +11,8 @@ import { WordCloud } from "./shared/WordCloud";
 import { Tweet, TwitterUser, Word } from "../models/model";
 import { TwitterPlot } from "./shared/TwitterPlot";
 import { TweetsList } from "./shared/TweetsList";
+import { Refresh } from "@material-ui/icons";
+import { IconButton } from "@material-ui/core";
 
 const StyledContainer = styled(Grid)`
   padding: 8px;
@@ -61,6 +63,12 @@ export function PoliticalFigureDetail({
   const [sentimentData, setSentimentData] = useState<SentimentData[]>([]);
   const [wordsData, setWordsData] = useState<Word[]>([]);
   const [tweetsData, setTweetsData] = useState<Tweet[]>([]);
+  const [chosenTopic, setChosenTopic] = useState<string>("");
+  const [chosenSentiment, setChosenSentiment] = useState<string>("");
+
+  const refreshTweetsList = useCallback(() => {
+    return api.getTweetsForUser(username, "5", chosenTopic, chosenSentiment);
+  }, [username, chosenTopic, chosenSentiment]);
 
   useEffect(() => {
     forkJoin({
@@ -69,29 +77,28 @@ export function PoliticalFigureDetail({
       topics: api.getTopicsForUser(username),
       sentiments: api.getSentimentsForUser(username),
       words: api.getWordsForUser(username),
-      tweets: api.getTweetsForUser(username),
-    }).subscribe(({ user, userPhotoUrl, topics, sentiments, words, tweets }) => {
+    }).subscribe(({ user, userPhotoUrl, topics, sentiments, words }) => {
       if (user) {
-        user.photoUrl = userPhotoUrl
-        setSelectedUser(user) 
-      };
+        user.photoUrl = userPhotoUrl;
+        setSelectedUser(user);
+      }
       setTopicData(topics);
       setSentimentData(sentiments);
       setWordsData(words);
-      setTweetsData(tweets);
     });
   }, [username]);
 
+  useEffect(() => {
+    refreshTweetsList().subscribe(setTweetsData);
+  }, [refreshTweetsList]);
 
-  function onTopicColumnClick(event: Readonly<Plotly.PlotMouseEvent>) {
-    console.log(event);
+  function onTopicColumnClick(event: any) {
+    setChosenTopic(event.points[0].label);
   }
 
-  function onSentimentColumnClick(event: Readonly<Plotly.PlotMouseEvent>) {
-    console.log(event);
+  function onSentimentColumnClick(event: any) {
+    setChosenSentiment(event.points[0].label);
   }
-
-
 
   return (
     <Fade in={true}>
@@ -157,6 +164,9 @@ export function PoliticalFigureDetail({
           <Grow in={true}>
             <StyledItem item xs={11} md={12} lg={8} xl={12}>
               <PlotPaper elevation={1}>
+                <Typography variant="h6" align="center">
+                  Positional analysis
+                </Typography>
                 <TwitterPlot
                   twitterUsers={twitterUsers}
                   is_3D={true}
@@ -179,9 +189,16 @@ export function PoliticalFigureDetail({
         >
           <Grow in={true}>
             <StyledItem item xs={11} md={8} lg={6} xl={12}>
-              <DynamicPaper elevation={1}>
+              <DynamicPaper elevation={1} style={{ position: "relative" }}>
+                {!chosenTopic && !chosenSentiment && <IconButton
+                  aria-label="refresh"
+                  style={{ position: "absolute", top: 0, right: 0 }}
+                  onClick={() => refreshTweetsList().subscribe(setTweetsData)}
+                >
+                  <Refresh fontSize="inherit" />
+                </IconButton>}
                 <Typography variant="h6" align="center">
-                  Tweets
+                  {!chosenTopic && !chosenSentiment ? "Tweets" : `Top Tweets for topic ${chosenTopic}`}
                 </Typography>
                 <br></br>
                 <TweetsList tweets={tweetsData} />

@@ -156,8 +156,8 @@ export const TwitterPlot = React.memo(
           <br>%{customdata[2]}
           <br>%{customdata[3]}
           <br>%{customdata[4]}
-          <br>%{customdata[5]}
           <extra></extra>`,
+          // <br>%{customdata[5]}
         // <br>%{customdata[6]}
         // <br>%{customdata[7]}
         // <br>%{customdata[8]}

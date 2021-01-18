@@ -12,9 +12,13 @@ export interface Api {
   getTopicsForUser(username: string): Observable<TopicData[]>;
   getSentimentsForUser(username: string): Observable<SentimentData[]>;
   getWordsForUser(username: string): Observable<Word[]>;
-  getTweetsForUser(username: string): Observable<Tweet[]>;
+  getTweetsForUser(
+    username: string,
+    limit?: string,
+    topic?: string,
+    sentiment?: string
+  ): Observable<Tweet[]>;
   getPhotoUrlForUser(username: string): Observable<string>;
 }
-
 
 export const api: Api = USE_DUMMY_API ? new DummyApi() : new RemoteApi();
