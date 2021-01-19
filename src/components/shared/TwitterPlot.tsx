@@ -4,19 +4,54 @@ import { TwitterUser } from "../../models/model";
 import { DataFrame } from "data-forge";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { Data } from "plotly.js";
+import styled from "styled-components";
+import {
+  FormControl,
+  FormControlLabel,
+  InputLabel,
+  MenuItem,
+  Paper,
+  Select,
+  Switch,
+} from "@material-ui/core";
+
+const PlotContainer = styled.div`
+  height: 100%;
+  width: 100%;
+  position: relative;
+`;
+
+const Floater = styled(Paper)`
+  top: 0;
+  left: 0;
+  margin: 16px;
+  padding: 8px;
+  position: absolute;
+  display: flex;
+  flex-flow: row nowrap;
+`;
+
+const StyledFormControl = styled(FormControl)`
+  min-width: 200px;
+  margin-right: 16px;
+`;
 
 interface TwitterPlotProps {
   data: TwitterUser[];
+  availableClusteringProperties: string[];
   initialClusteringProperty: string;
   is_3D?: boolean;
   selectedUsername?: string;
+  floater?: boolean;
 }
 
 export function TwitterPlot({
   data,
   initialClusteringProperty,
+  availableClusteringProperties,
   is_3D = true,
   selectedUsername = "",
+  floater = true,
 }: TwitterPlotProps) {
   let { path } = useRouteMatch();
   const history = useHistory();
@@ -179,16 +214,45 @@ export function TwitterPlot({
   }, [df, clusteringProperty, selectedUsername]);
 
   return (
-    <Plot
-      onInitialized={(figure) => setPlotState(figure)}
-      // onUpdate={(figure) => setPlotState(figure)}  // CAUSES INFINITE LOOP
-      onClick={onPlotlyClick}
-      data={plotData}
-      config={{ displayModeBar: false, responsive: true }}
-      style={{ width: "100%", height: "100%" }}
-      useResizeHandler
-      layout={plotState.layout}
-      frames={plotState.frames!}
-    />
+    <PlotContainer>
+      <Plot
+        onInitialized={(figure) => setPlotState(figure)}
+        // onUpdate={(figure) => setPlotState(figure)}  // CAUSES INFINITE LOOP
+        onClick={onPlotlyClick}
+        data={plotData}
+        config={{ displayModeBar: false, responsive: true }}
+        style={{ width: "100%", height: "100%" }}
+        useResizeHandler
+        layout={plotState.layout}
+        frames={plotState.frames!}
+      />
+      {floater && (
+        <Floater>
+          <StyledFormControl >
+            <InputLabel id="clustering-property-label">
+              Clustering property
+            </InputLabel>
+            <Select
+              labelId="clustering-property-label"
+              id="clustering-property-select"
+              value={clusteringProperty}
+              onChange={event => setClusteringProperty(event?.target.value as string)}
+            >
+              {availableClusteringProperties.map(availableProperty => (<MenuItem value={availableProperty}>{availableProperty}</MenuItem>))}
+            </Select>
+          </StyledFormControl>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={is3d}
+                onChange={(event) => setIs3d(event.target.checked)}
+                name="is3d"
+              />
+            }
+            label="3D"
+          />
+        </Floater>
+      )}
+    </PlotContainer>
   );
 }

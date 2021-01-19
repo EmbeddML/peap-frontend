@@ -46,16 +46,16 @@ export enum PoliticalFigureDetailType {
 
 export interface PoliticalFigureDetailProps {
   politicalFigureDetailType: PoliticalFigureDetailType;
-  twitterUsers: TwitterUser[];
-  is_3D: boolean;
-  clusteringProperty: string;
+  data: TwitterUser[];
+  clusteringProperty?: string;
+  availableClusteringProperties?: string[]
 }
 
 export function PoliticalFigureDetail({
   politicalFigureDetailType,
-  twitterUsers,
-  is_3D,
-  clusteringProperty,
+  data,
+  clusteringProperty = "",
+  availableClusteringProperties = [],
 }: PoliticalFigureDetailProps) {
   const { username } = useParams<{ username: string }>();
   const [selectedUser, setSelectedUser] = useState<TwitterUser | null>();
@@ -171,8 +171,9 @@ export function PoliticalFigureDetail({
                   Speech analysis
                 </Typography>
                 <TwitterPlot
-                  data={twitterUsers}
+                  data={data}
                   is_3D={true}
+                  availableClusteringProperties={availableClusteringProperties}
                   initialClusteringProperty={clusteringProperty}
                   selectedUsername={username}
                 ></TwitterPlot>
