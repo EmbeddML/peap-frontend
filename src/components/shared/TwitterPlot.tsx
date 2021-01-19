@@ -44,24 +44,24 @@ export const TwitterPlot = React.memo(
         margin: { l: 0, r: 0, b: 0, t: 0, pad: 0 },
         scene: {
           xaxis: {
-            showgrid: false,
+            // showgrid: false,
             showticklabels: false,
             title: { text: "" },
-            showspikes: false,
+            // showspikes: false,
             zeroline: false,
           },
           yaxis: {
-            showgrid: false,
+            // showgrid: false,
             showticklabels: false,
             title: { text: "" },
-            showspikes: false,
+            // showspikes: false,
             zeroline: false,
           },
           zaxis: {
-            showgrid: false,
+            // showgrid: false,
             showticklabels: false,
             title: { text: "" },
-            showspikes: false,
+            // showspikes: false,
             zeroline: false,
           },
           annotations: selectedUser
@@ -73,7 +73,7 @@ export const TwitterPlot = React.memo(
                   z: selectedUser.z_graph3d,
                   text: selectedUser.username,
                   xanchor: "left",
-                  xshift: 40,
+                  xshift: 20,
                   opacity: 1,
                 },
               ]
@@ -134,6 +134,9 @@ export const TwitterPlot = React.memo(
       const symbols = usernames.map((username) =>
         username === selectedUsername ? "diamond" : "circle"
       );
+      const sizes = usernames.map((username) =>
+        username === selectedUsername ? 30 : 15
+    );
       return {
         x: df_f.getSeries("x_graph3d").toArray(),
         y: df_f.getSeries("y_graph3d").toArray(),
@@ -146,6 +149,7 @@ export const TwitterPlot = React.memo(
         marker: {
           opacity: 1,
           // size: df_f.getSeries("tweets_count").toArray(),
+          size: sizes,
           symbol: symbols,
         },
         name: cluster_value,

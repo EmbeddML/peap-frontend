@@ -3,7 +3,7 @@ import { Fade, Grid, Paper, Typography, Grow } from "@material-ui/core";
 import styled from "styled-components";
 import { api } from "../api/api";
 import { useCallback, useEffect, useState } from "react";
-import { BarPlot, BarPlotType } from "./shared/BarPlot";
+import { BarPlot, BarPlotSubject } from "./shared/BarPlot";
 import { PoliticalFigureDescription } from "./shared/PoliticalFigureDescription";
 import { SentimentData, TopicData } from "../models/types";
 import { forkJoin } from "rxjs";
@@ -92,12 +92,12 @@ export function PoliticalFigureDetail({
     refreshTweetsList().subscribe(setTweetsData);
   }, [refreshTweetsList]);
 
-  function onTopicColumnClick(event: any) {
-    setChosenTopic(event.points[0].label);
+  function onTopicColumnClick(label: string) {
+    setChosenTopic(label);
   }
 
-  function onSentimentColumnClick(event: any) {
-    setChosenSentiment(event.points[0].label);
+  function onSentimentColumnClick(label: string) {
+    setChosenSentiment(label);
   }
 
   return (
@@ -139,9 +139,9 @@ export function PoliticalFigureDetail({
                   Topic analysis
                 </Typography>
                 <BarPlot
-                  plotData={topicData}
+                  data={topicData}
                   onColumnClick={onTopicColumnClick}
-                  barPlotType={BarPlotType.Topic}
+                  initialBarPlotSubject={BarPlotSubject.Topic}
                 ></BarPlot>
               </StyledPaper>
             </StyledItem>
@@ -153,9 +153,9 @@ export function PoliticalFigureDetail({
                   Sentiment analysis
                 </Typography>
                 <BarPlot
-                  plotData={sentimentData}
+                  data={sentimentData}
                   onColumnClick={onSentimentColumnClick}
-                  barPlotType={BarPlotType.Sentiment}
+                  initialBarPlotSubject={BarPlotSubject.Sentiment}
                 ></BarPlot>
               </StyledPaper>
             </StyledItem>
@@ -165,12 +165,12 @@ export function PoliticalFigureDetail({
             <StyledItem item xs={11} md={12} lg={8} xl={12}>
               <PlotPaper elevation={1}>
                 <Typography variant="h6" align="center">
-                  Positional analysis
+                  Speech analysis
                 </Typography>
                 <TwitterPlot
                   twitterUsers={twitterUsers}
                   is_3D={true}
-                  clusteringProperty={"coalition"}
+                  clusteringProperty={clusteringProperty}
                   selectedUsername={username}
                 ></TwitterPlot>
               </PlotPaper>

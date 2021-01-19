@@ -11,6 +11,8 @@ import {
 export function Politicians() {
   let { path } = useRouteMatch();
   const [twitterUsers, setTwitterUsers] = useState<TwitterUser[]>([]);
+  const [clusteringProperty, setClusteringProperty] = useState<string>("cluster_kmeans_id");
+  const [is3d, setIs3d] = useState<boolean>(true);
 
   useEffect(() => {
     api.getAllTwitterUsers().subscribe(setTwitterUsers);
@@ -21,16 +23,16 @@ export function Politicians() {
         <Route exact path={path}>
           <TwitterPlot
             twitterUsers={twitterUsers}
-            is_3D={true}
-            clusteringProperty={"cluster_dbscan_id"}
+            is_3D={is3d}
+            clusteringProperty={clusteringProperty}
           ></TwitterPlot>
         </Route>
         <Route path={`${path}/:username`}>
           <PoliticalFigureDetail
             politicalFigureDetailType={PoliticalFigureDetailType.Politician}
             twitterUsers={twitterUsers}
-            is_3D={true}
-            clusteringProperty={"cluster_dbscan_id"}
+            is_3D={is3d}
+            clusteringProperty={clusteringProperty}
           ></PoliticalFigureDetail>
         </Route>
       </Switch>

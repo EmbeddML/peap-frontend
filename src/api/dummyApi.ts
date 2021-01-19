@@ -4,6 +4,9 @@ import { SentimentData, TopicData } from "../models/types";
 import { Api } from "./api";
 
 export class DummyApi implements Api {
+  getWordsForTopic(topic: string, limit?: string): Observable<Word[]> {
+    throw new Error("Method not implemented.");
+  }
   getPhotoUrlForUser(username: string): Observable<string> {
     throw new Error("Method not implemented.");
   }

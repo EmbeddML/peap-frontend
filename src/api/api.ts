@@ -19,6 +19,9 @@ export interface Api {
     sentiment?: string
   ): Observable<Tweet[]>;
   getPhotoUrlForUser(username: string): Observable<string>;
+
+  getWordsForTopic(topic: string, limit?: string,): Observable<Word[]>;
+
 }
 
 export const api: Api = USE_DUMMY_API ? new DummyApi() : new RemoteApi();

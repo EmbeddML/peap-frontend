@@ -13,22 +13,46 @@ const USER_PHOTO_LINK = (username: string) => `${USER_LINK(username)}/photo`;
 const USER_TOPICS_LINK = (username: string) => `${USER_LINK(username)}/topic`;
 const USER_SENTIMENTS_LINK = (username: string) =>
   `${USER_LINK(username)}/sentiment`;
-const USER_WORDS_LINK = (username: string) => `${USER_LINK(username)}/word`;
+const USER_WORDS_LINK = (username: string, limit?: string) => {
+  let link = `${USER_LINK(username)}/word?`;
+  link += limit ? `limit=${limit}&` : "";
+  return link;
+};
 const USER_TWEETS_LINK = (
   username: string,
   limit?: string,
   topic?: string,
   sentiment?: string
 ) => {
-  let link = `${USER_LINK(username)}/tweets/?`;
+  let link = `${USER_LINK(username)}/tweets?`;
   link += limit ? `limit=${limit}&` : "";
   link += topic ? `topic=${topic}&` : "";
   link += sentiment ? `sentiment=${sentiment}&` : "";
   return link;
 };
 
+const ALL_PARTIES_LINK = `${BACKEND_API_URL}/party`;
+
+const ALL_COALITIONS_LINK = `${BACKEND_API_URL}/coalitions`;
+
+const TOPIC_LINK = (topic_id: string) => `${BACKEND_API_URL}/topic/${topic_id}`;
+const TOPIC_SENTIMENTS_LINK = (topic_id: string) =>
+  `${TOPIC_LINK(topic_id)}/sentiment`;
+const TOPIC_WORDS_LINK = (topic_id: string, limit?: string) => {
+  let link = `${TOPIC_LINK(topic_id)}/word?`;
+  link += limit ? `limit=${limit}&` : "";
+  return link;
+};
+
 
 export class RemoteApi implements Api {
+  getWordsForTopic(topic: string, limit?: string): Observable<Word[]> {
+    return fromFetch(TOPIC_WORDS_LINK(topic, limit)).pipe(
+      switchMap((response) => response.json()),
+      map((words: any[]) => words as Word[])
+    );
+  }
+
   getTweetsForUser(
     username: string,
     limit?: string,
@@ -38,19 +62,18 @@ export class RemoteApi implements Api {
     return fromFetch(USER_TWEETS_LINK(username, limit, topic, sentiment)).pipe(
       switchMap((response) => response.json()),
       map((tweets: any[]) =>
-        tweets.map(
-          (tweet) => {
-            const linkSplit: string[] = tweet["twitter_link"].split('/')
-            const id: string = linkSplit[linkSplit.length - 1]
-            return new Tweet(
-              id,
-              tweet["twitter_link"],
-              tweet["username"],
-              tweet["tweet_text"],
-              [tweet["topic"], tweet["topic_proba"]] as TopicData,
-              tweet["sentiment"]
-            )}
-        ),
+        tweets.map((tweet) => {
+          const linkSplit: string[] = tweet["twitter_link"].split("/");
+          const id: string = linkSplit[linkSplit.length - 1];
+          return new Tweet(
+            id,
+            tweet["twitter_link"],
+            tweet["username"],
+            tweet["tweet_text"],
+            [tweet["topic"], tweet["topic_proba"]] as TopicData,
+            tweet["sentiment"]
+          );
+        })
       )
     );
   }

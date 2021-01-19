@@ -2,7 +2,6 @@ import { Coalition, Party, TwitterUser } from "../../models/model";
 import Avatar from "@material-ui/core/Avatar";
 import styled from "styled-components";
 import { Divider, Grid, Typography } from "@material-ui/core";
-import { green } from '@material-ui/core/colors';
 export interface PoliticalFigureDescriptionProps {
   politicalFigureData: TwitterUser | Party | Coalition | null;
 }
@@ -38,7 +37,6 @@ export function PoliticalFigureDescription(
           <Grid container item justify="center">
             <StyledAvatar
               alt="avatar"
-              style={{backgroundColor: green[500]}}
               src={politicalFigureData.photoUrl}
             >
               {politicalFigureData.username}
