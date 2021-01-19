@@ -20,7 +20,8 @@ export interface Api {
   ): Observable<Tweet[]>;
   getPhotoUrlForUser(username: string): Observable<string>;
 
-  getWordsForTopic(topic: string, limit?: string,): Observable<Word[]>;
+  getWordsForTopic(topic: string, limit?: string): Observable<Word[]>;
+  getSentimentsForTopic(topic: string): Observable<SentimentData[]>;
 
 }
 

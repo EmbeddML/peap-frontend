@@ -1,6 +1,6 @@
 import { Observable } from "rxjs";
 import { fromFetch } from "rxjs/fetch";
-import { map, switchMap } from "rxjs/operators";
+import { map, switchMap, tap } from "rxjs/operators";
 import { Tweet, TwitterUser, Word } from "../models/model";
 import { SentimentData, TopicData } from "../models/types";
 import { Api } from "./api";
@@ -46,6 +46,13 @@ const TOPIC_WORDS_LINK = (topic_id: string, limit?: string) => {
 
 
 export class RemoteApi implements Api {
+  getSentimentsForTopic(topic: string): Observable<SentimentData[]> {
+    return fromFetch(TOPIC_SENTIMENTS_LINK(topic)).pipe(
+      switchMap((response) => response.json()),
+      map((sentiments: any[]) => sentiments as SentimentData[])
+    );
+  }
+
   getWordsForTopic(topic: string, limit?: string): Observable<Word[]> {
     return fromFetch(TOPIC_WORDS_LINK(topic, limit)).pipe(
       switchMap((response) => response.json()),

@@ -4,6 +4,9 @@ import { SentimentData, TopicData } from "../models/types";
 import { Api } from "./api";
 
 export class DummyApi implements Api {
+  getSentimentsForTopic(topic: string): Observable<SentimentData[]> {
+    throw new Error("Method not implemented.");
+  }
   getWordsForTopic(topic: string, limit?: string): Observable<Word[]> {
     throw new Error("Method not implemented.");
   }

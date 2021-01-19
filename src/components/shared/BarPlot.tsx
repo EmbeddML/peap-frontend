@@ -1,13 +1,12 @@
 import { DataFrame } from "data-forge";
 import { Data } from "plotly.js";
-import React, { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Plot, { Figure } from "react-plotly.js";
 import { forkJoin, Observable } from "rxjs";
-import { fromFetch } from "rxjs/fetch";
-import { flatMap, mergeMap, map, tap } from "rxjs/operators";
+import { map,  } from "rxjs/operators";
 import { api } from "../../api/api";
 import { Word } from "../../models/model";
-import { red, blue, lightGreen, purple, green, grey } from "@material-ui/core/colors/";
+import { red, blue, purple, grey } from "@material-ui/core/colors/";
 
 export enum BarPlotSubject {
   Default,
@@ -147,7 +146,7 @@ export const BarPlot = ({
         hovertemplate:
           bps === BarPlotSubject.Topic
             ? `
-        <b>Top ${15} words:</b>
+        <b>Topic description:</b>
         <br>%{customdata[0][0]}
         <br>%{customdata[1][0]}
         <br>%{customdata[2][0]}

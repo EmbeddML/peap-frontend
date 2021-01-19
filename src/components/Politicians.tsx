@@ -22,9 +22,9 @@ export function Politicians() {
       <Switch>
         <Route exact path={path}>
           <TwitterPlot
-            twitterUsers={twitterUsers}
+            data={twitterUsers}
             is_3D={is3d}
-            clusteringProperty={clusteringProperty}
+            initialClusteringProperty={clusteringProperty}
           ></TwitterPlot>
         </Route>
         <Route path={`${path}/:username`}>

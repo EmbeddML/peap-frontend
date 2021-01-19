@@ -92,6 +92,7 @@ export function PoliticalFigureDetail({
     refreshTweetsList().subscribe(setTweetsData);
   }, [refreshTweetsList]);
 
+
   function onTopicColumnClick(label: string) {
     setChosenTopic(label);
   }
@@ -99,6 +100,8 @@ export function PoliticalFigureDetail({
   function onSentimentColumnClick(label: string) {
     setChosenSentiment(label);
   }
+
+
 
   return (
     <Fade in={true}>
@@ -168,9 +171,9 @@ export function PoliticalFigureDetail({
                   Speech analysis
                 </Typography>
                 <TwitterPlot
-                  twitterUsers={twitterUsers}
+                  data={twitterUsers}
                   is_3D={true}
-                  clusteringProperty={clusteringProperty}
+                  initialClusteringProperty={clusteringProperty}
                   selectedUsername={username}
                 ></TwitterPlot>
               </PlotPaper>
@@ -190,7 +193,7 @@ export function PoliticalFigureDetail({
           <Grow in={true}>
             <StyledItem item xs={11} md={8} lg={6} xl={12}>
               <DynamicPaper elevation={1} style={{ position: "relative" }}>
-                {!chosenTopic && !chosenSentiment && <IconButton
+                {!chosenTopic && <IconButton
                   aria-label="refresh"
                   style={{ position: "absolute", top: 0, right: 0 }}
                   onClick={() => refreshTweetsList().subscribe(setTweetsData)}
@@ -198,7 +201,7 @@ export function PoliticalFigureDetail({
                   <Refresh fontSize="inherit" />
                 </IconButton>}
                 <Typography variant="h6" align="center">
-                  {!chosenTopic && !chosenSentiment ? "Tweets" : `Top Tweets for topic ${chosenTopic}`}
+                  {chosenTopic ? "Top" : "Random"} Tweets {chosenTopic || chosenSentiment ? "for (" : ""}{chosenTopic ? `Topic ${chosenTopic}` : ""}{chosenTopic && chosenSentiment ? `, ` : ""}{chosenSentiment ? `${chosenSentiment}` : ""}{chosenTopic || chosenSentiment ? ")" : ""}
                 </Typography>
                 <br></br>
                 <TweetsList tweets={tweetsData} />
