@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Plot, { Figure } from "react-plotly.js";
 import { TwitterUser } from "../../models/model";
 import { DataFrame } from "data-forge";
@@ -53,7 +53,7 @@ export function TwitterPlot({
   selectedUsername = "",
   floater = true,
 }: TwitterPlotProps) {
-  let { path } = useRouteMatch();
+  let { path, url } = useRouteMatch();
   const history = useHistory();
 
   const [df, setDf] = useState<DataFrame<TwitterUser>>(new DataFrame());
@@ -67,15 +67,14 @@ export function TwitterPlot({
     {} as Readonly<Figure>
   );
 
-  function onPlotlyClick(event: any) {
+  const onPlotlyClick = useCallback((event: any) => {
     const username = event.points[0].text;
-
     if (!selectedUser) {
       history.push(`${path}/${username}`);
-    } else {
-      history.replace(username);
+    } else if (!url.includes(username)) {
+      history.push(path.replace(":username", username));
     }
-  }
+  }, [history, selectedUser, path, url])
 
   useEffect(() => {
     setDf(new DataFrame(data));
@@ -244,7 +243,7 @@ export function TwitterPlot({
         frames={plotState.frames!}
       />
       {floater && (
-        <Floater>
+        <Floater style={selectedUsername ? {marginTop: "0"} : {}}>
           <StyledFormControl>
             <InputLabel id="clustering-property-label">
               Clustering property

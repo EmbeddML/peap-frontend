@@ -10,6 +10,7 @@ import {
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
+import InfoIcon from "@material-ui/icons/Info";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
@@ -112,6 +113,20 @@ export const Sidebar = React.forwardRef((props: SidebarProps, ref) => {
             <PersonAddIcon />
           </ListItemIcon>
           <ListItemText primary="You" />
+        </ListItem>
+        <Divider variant="middle"/>
+        <ListItem
+          button
+          component={Link}
+          key="about"
+          to={"/about"}
+          selected={selectedIndex === 4}
+          onClick={(event: any) => handleListItemClick(event, 4)}
+        >
+          <ListItemIcon>
+            <InfoIcon />
+          </ListItemIcon>
+          <ListItemText primary="About" />
         </ListItem>
       </List>
     </Drawer>
