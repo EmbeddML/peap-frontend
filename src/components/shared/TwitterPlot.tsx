@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Plot, { Figure } from "react-plotly.js";
 import { TwitterUser } from "../../models/model";
 import { DataFrame } from "data-forge";
-import { useHistory, useRouteMatch } from "react-router-dom";
+import { Link, useHistory, useRouteMatch } from "react-router-dom";
 import { Data } from "plotly.js";
 import styled from "styled-components";
 import {
@@ -68,14 +68,12 @@ export function TwitterPlot({
   );
 
   function onPlotlyClick(event: any) {
-    console.log(event);
     const username = event.points[0].text;
-    console.log(history);
 
     if (!selectedUser) {
       history.push(`${path}/${username}`);
     } else {
-      history.goBack();
+      history.replace(username);
     }
   }
 
@@ -100,6 +98,7 @@ export function TwitterPlot({
     const state = {
       data: [],
       layout: {
+        hovermode: "closest",
         legend: {
           x: 1,
           xanchor: "right",
@@ -130,18 +129,32 @@ export function TwitterPlot({
             zeroline: false,
           },
           annotations: selectedUser
-            ? [
-                {
-                  showarrow: false,
-                  x: selectedUser.x_graph3d,
-                  y: selectedUser.y_graph3d,
-                  z: selectedUser.z_graph3d,
-                  text: selectedUser.username,
-                  xanchor: "left",
-                  xshift: 20,
-                  opacity: 1,
-                },
-              ]
+            ? is3d
+              ? [
+                  {
+                    showarrow: false,
+                    x: selectedUser.x_graph3d,
+                    y: selectedUser.y_graph3d,
+                    z: selectedUser.z_graph3d,
+                    text: selectedUser.username,
+                    xanchor: "left",
+                    xshift: 20,
+                    opacity: 1,
+                  },
+                ]
+              : [
+                  // {
+                  //   showarrow: false,
+                  //   x: selectedUser.x_graph2d,
+                  //   y: selectedUser.y_graph2d,
+                  //   xref: "x",
+                  //   yref: "y",
+                  //   text: selectedUser.username,
+                  //   // xanchor: "left",
+                  //   // xshift: 20,
+                  //   // opacity: 1,
+                  // },
+                ]
             : [],
         },
       },
@@ -149,7 +162,7 @@ export function TwitterPlot({
     } as Readonly<Figure>;
 
     setPlotState(state);
-  }, [selectedUser]);
+  }, [selectedUser, is3d]);
 
   useEffect(() => {
     const unique_cluster_values = df
@@ -184,12 +197,16 @@ export function TwitterPlot({
         username === selectedUsername ? 30 : 15
       );
       return {
-        x: df_f.getSeries("x_graph3d").toArray(),
-        y: df_f.getSeries("y_graph3d").toArray(),
-        z: df_f.getSeries("z_graph3d").toArray(),
+        x: is3d
+          ? df_f.getSeries("x_graph3d").toArray()
+          : df_f.getSeries("x_graph2d").toArray(),
+        y: is3d
+          ? df_f.getSeries("y_graph3d").toArray()
+          : df_f.getSeries("y_graph2d").toArray(),
+        z: is3d ? df_f.getSeries("z_graph3d").toArray() : [],
         text: usernames,
         customdata: customdata,
-        type: "scatter3d",
+        type: is3d ? "scatter3d" : "scatter",
         mode: "markers",
         showlegend: true,
         marker: {
@@ -211,7 +228,7 @@ export function TwitterPlot({
     });
 
     setPlotData(newPlotData);
-  }, [df, clusteringProperty, selectedUsername]);
+  }, [df, clusteringProperty, selectedUsername, is3d]);
 
   return (
     <PlotContainer>
@@ -228,7 +245,7 @@ export function TwitterPlot({
       />
       {floater && (
         <Floater>
-          <StyledFormControl >
+          <StyledFormControl>
             <InputLabel id="clustering-property-label">
               Clustering property
             </InputLabel>
@@ -236,9 +253,15 @@ export function TwitterPlot({
               labelId="clustering-property-label"
               id="clustering-property-select"
               value={clusteringProperty}
-              onChange={event => setClusteringProperty(event?.target.value as string)}
+              onChange={(event) =>
+                setClusteringProperty(event?.target.value as string)
+              }
             >
-              {availableClusteringProperties.map(availableProperty => (<MenuItem value={availableProperty}>{availableProperty}</MenuItem>))}
+              {availableClusteringProperties.map((availableProperty) => (
+                <MenuItem value={availableProperty}>
+                  {availableProperty}
+                </MenuItem>
+              ))}
             </Select>
           </StyledFormControl>
           <FormControlLabel
