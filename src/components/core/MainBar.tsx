@@ -15,7 +15,7 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import { useCallback, useEffect, useState } from "react";
 import { TwitterUser } from "../../models/model";
 import { api } from "../../api/api";
-import { useHistory } from "react-router-dom";
+import { useHistory, useRouteMatch } from "react-router-dom";
 
 
 const StyledTextField = styled(TextField)`
@@ -39,9 +39,11 @@ export interface MainBarProps {
 
 export function MainBar({ handleSidebarOpen }: MainBarProps) {
   const [searchValue, setSearchValue] = useState<TwitterUser | null>(null);
-  const [politicians, setPoliticians] = useState<TwitterUser[]>([]);;
+  const [politicians, setPoliticians] = useState<TwitterUser[]>([]);
+
   const history = useHistory();
-  
+  const [currentUrl, setCurrentUrl] = useState<string>(history.location.pathname);
+
   useEffect(() => {
     api.getAllTwitterUsers().subscribe((newPoliticians) => setPoliticians(newPoliticians.sort((a: TwitterUser, b: TwitterUser) => a.name.localeCompare(b.name))) )
   }, [])
@@ -54,6 +56,13 @@ export function MainBar({ handleSidebarOpen }: MainBarProps) {
     }
   
   }, [searchValue, history])
+
+  useEffect(() => {
+    const unlisten = history.listen((location) => {
+      setCurrentUrl(location.pathname)
+    })
+    return () => unlisten()
+  }, [history])
 
   return (
     <>
@@ -80,7 +89,7 @@ export function MainBar({ handleSidebarOpen }: MainBarProps) {
                 <Typography variant="h6">Political figures analysis</Typography>
               </Grid>
             </Grid>
-            <Grid item style={{ flex: "1 0 auto" }}>
+            {currentUrl.includes("politicians") && <Grid item style={{ flex: "1 0 auto" }}>
               <Grid
                 container
                 style={{ height: "100%" }}
@@ -136,7 +145,7 @@ export function MainBar({ handleSidebarOpen }: MainBarProps) {
                   </Grid>
                 </Grid>
               </Grid>
-            </Grid>
+            </Grid>}
           </Grid>
         </Toolbar>
       </AppBar>

@@ -11,8 +11,8 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import InfoIcon from "@material-ui/icons/Info";
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useHistory } from "react-router-dom";
 import styled from "styled-components";
 import GroupWorkIcon from "@material-ui/icons/GroupWork";
 import AccountTreeIcon from "@material-ui/icons/AccountTree";
@@ -29,6 +29,34 @@ const DrawerHeader = styled.div`
   padding: 8px;
 `;
 
+class DrawerListItem {
+  constructor(
+    public key: string,
+    public to: string,
+    public text: string,
+    public icon: JSX.Element,
+    public dividerBefore: boolean = false
+  ) {}
+}
+
+const drawerListItems = [
+  new DrawerListItem(
+    "politicians",
+    "/politicians",
+    "Politicians",
+    <SupervisorAccountIcon />
+  ),
+  new DrawerListItem("parties", "/parties", "Parties", <GroupWorkIcon />),
+  new DrawerListItem(
+    "coalitions",
+    "/coalitions",
+    "Coalitions",
+    <AccountTreeIcon />
+  ),
+  new DrawerListItem("customUser", "/customUser", "You", <PersonAddIcon />),
+  new DrawerListItem("about", "/about", "About", <InfoIcon />, true),
+];
+
 export interface SidebarProps {
   sidebarOpen: boolean;
   handleSidebarClose: () => void;
@@ -36,6 +64,17 @@ export interface SidebarProps {
 
 export const Sidebar = React.forwardRef((props: SidebarProps, ref) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const history = useHistory();
+  const [currentUrl, setCurrentUrl] = useState<string>(
+    history.location.pathname
+  );
+
+  useEffect(() => {
+    const unlisten = history.listen((location) => {
+      setCurrentUrl(location.pathname);
+    });
+    return () => unlisten();
+  }, [history]);
 
   const handleListItemClick = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
@@ -43,6 +82,13 @@ export const Sidebar = React.forwardRef((props: SidebarProps, ref) => {
   ) => {
     setSelectedIndex(index);
   };
+
+  useEffect(() => {
+    const index = drawerListItems.findIndex(drawerListItem => currentUrl.includes(drawerListItem.to))
+    if (index !== -1) {
+      setSelectedIndex(index)
+    }
+  }, [currentUrl]);
 
   return (
     <Drawer
@@ -59,75 +105,22 @@ export const Sidebar = React.forwardRef((props: SidebarProps, ref) => {
       </DrawerHeader>
       <Divider />
       <List>
-        <ListItem
-          button
-          component={Link}
-          key="politicians"
-          to={"/politicians"}
-          selected={selectedIndex === 0}
-          onClick={(event: any) => handleListItemClick(event, 0)}
-        >
-          <ListItemIcon>
-            <SupervisorAccountIcon />
-          </ListItemIcon>
-          <ListItemText primary="Politicians" />
-        </ListItem>
-
-        <ListItem
-          button
-          component={Link}
-          key="parties"
-          to={"/parties"}
-          selected={selectedIndex === 1}
-          onClick={(event: any) => handleListItemClick(event, 1)}
-        >
-          <ListItemIcon>
-            <GroupWorkIcon />
-          </ListItemIcon>
-          <ListItemText primary="Parties" />
-        </ListItem>
-
-        <ListItem
-          button
-          component={Link}
-          key="coalitions"
-          to={"/coalitions"}
-          selected={selectedIndex === 2}
-          onClick={(event: any) => handleListItemClick(event, 2)}
-        >
-          <ListItemIcon>
-            <AccountTreeIcon />
-          </ListItemIcon>
-          <ListItemText primary="Coalitions" />
-        </ListItem>
-
-        <ListItem
-          button
-          component={Link}
-          key="user"
-          to={"/user"}
-          selected={selectedIndex === 3}
-          onClick={(event: any) => handleListItemClick(event, 3)}
-        >
-          <ListItemIcon>
-            <PersonAddIcon />
-          </ListItemIcon>
-          <ListItemText primary="You" />
-        </ListItem>
-        <Divider variant="middle"/>
-        <ListItem
-          button
-          component={Link}
-          key="about"
-          to={"/about"}
-          selected={selectedIndex === 4}
-          onClick={(event: any) => handleListItemClick(event, 4)}
-        >
-          <ListItemIcon>
-            <InfoIcon />
-          </ListItemIcon>
-          <ListItemText primary="About" />
-        </ListItem>
+        {drawerListItems.map((drawerListItem, index) => (
+          <>
+            {drawerListItem.dividerBefore ? <Divider variant="middle" /> : null}
+            <ListItem
+              button
+              component={Link}
+              key={drawerListItem.key}
+              to={drawerListItem.to}
+              selected={selectedIndex === index}
+              onClick={(event: any) => handleListItemClick(event, index)}
+            >
+              <ListItemIcon>{drawerListItem.icon}</ListItemIcon>
+              <ListItemText primary={drawerListItem.text} />
+            </ListItem>
+          </>
+        ))}
       </List>
     </Drawer>
   );

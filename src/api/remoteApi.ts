@@ -1,7 +1,7 @@
 import { Observable } from "rxjs";
 import { fromFetch } from "rxjs/fetch";
 import { map, switchMap, tap } from "rxjs/operators";
-import { Tweet, TwitterUser, Word } from "../models/model";
+import { Party, Tweet, TwitterUser, Word } from "../models/model";
 import { SentimentData, TopicData } from "../models/types";
 import { Api } from "./api";
 
@@ -44,8 +44,18 @@ const TOPIC_WORDS_LINK = (topic_id: string, limit?: string) => {
   return link;
 };
 
-
 export class RemoteApi implements Api {
+  getAllParties(): Observable<Party[]> {
+    return fromFetch(ALL_PARTIES_LINK).pipe(
+      switchMap((response) => response.json()),
+      map((parties: any[]) =>
+        parties.map(
+          (party) =>
+            new Party(party["party_id"], party["name"], party["coalition"])
+        )
+      )
+    );
+  }
   getSentimentsForTopic(topic: string): Observable<SentimentData[]> {
     return fromFetch(TOPIC_SENTIMENTS_LINK(topic)).pipe(
       switchMap((response) => response.json()),

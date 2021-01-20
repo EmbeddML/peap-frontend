@@ -1,5 +1,5 @@
 import { Observable } from "rxjs";
-import { Tweet, TwitterUser, Word } from "../models/model";
+import { Party, Tweet, TwitterUser, Word } from "../models/model";
 import { SentimentData, TopicData } from "../models/types";
 import { DummyApi } from "./dummyApi";
 import { RemoteApi } from "./remoteApi";
@@ -22,6 +22,8 @@ export interface Api {
 
   getWordsForTopic(topic: string, limit?: string): Observable<Word[]>;
   getSentimentsForTopic(topic: string): Observable<SentimentData[]>;
+
+  getAllParties(): Observable<Party[]>;
 
 }
 

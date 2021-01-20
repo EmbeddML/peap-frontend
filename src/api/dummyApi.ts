@@ -1,9 +1,12 @@
 import { Observable, of } from "rxjs";
-import { Tweet, TwitterUser, Word } from "../models/model";
+import { Party, Tweet, TwitterUser, Word } from "../models/model";
 import { SentimentData, TopicData } from "../models/types";
 import { Api } from "./api";
 
 export class DummyApi implements Api {
+  getAllParties(): Observable<Party[]> {
+    throw new Error("Method not implemented.");
+  }
   getSentimentsForTopic(topic: string): Observable<SentimentData[]> {
     throw new Error("Method not implemented.");
   }

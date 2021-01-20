@@ -19,6 +19,7 @@ import { MainBar } from "./components/core/MainBar";
 import { Sidebar } from "./components/core/Sidebar";
 import type from '@material-ui/lab/themeAugmentation';
 import { About } from "./components/About";
+import { Parties } from "./components/Parties";
 
 const GridAppBar = styled(Grid)`
   flex: 0 0 auto;
@@ -75,6 +76,9 @@ function App() {
               <Switch>
                 <Route path="/politicians">
                   <Politicians />
+                </Route>
+                <Route path="/parties">
+                  <Parties />
                 </Route>
                 <Route path="/about">
                   <About />
