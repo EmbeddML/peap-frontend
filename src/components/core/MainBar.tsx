@@ -43,7 +43,7 @@ export function MainBar({ handleSidebarOpen }: MainBarProps) {
   const history = useHistory();
   
   useEffect(() => {
-    api.getAllTwitterUsers().subscribe(setPoliticians)
+    api.getAllTwitterUsers().subscribe((newPoliticians) => setPoliticians(newPoliticians.sort((a: TwitterUser, b: TwitterUser) => a.name.localeCompare(b.name))) )
   }, [])
 
   useEffect(() => {
