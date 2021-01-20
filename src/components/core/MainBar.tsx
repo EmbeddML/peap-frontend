@@ -89,7 +89,7 @@ export function MainBar({ handleSidebarOpen }: MainBarProps) {
                 <Typography variant="h6">Political figures analysis</Typography>
               </Grid>
             </Grid>
-            {currentUrl.includes("politicians") && <Grid item style={{ flex: "1 0 auto" }}>
+            {(currentUrl.includes("politicians") || currentUrl === "/") && <Grid item style={{ flex: "1 0 auto" }}>
               <Grid
                 container
                 style={{ height: "100%" }}
