@@ -31,14 +31,10 @@ export function PoliticalFigureDescription(
             <Typography variant="h6" align="center">
               {politicalFigureData.name}
             </Typography>
-            
           </Grid>
 
           <Grid container item justify="center">
-            <StyledAvatar
-              alt="avatar"
-              src={politicalFigureData.photoUrl}
-            >
+            <StyledAvatar alt="avatar" src={politicalFigureData.photoUrl}>
               {politicalFigureData.username}
             </StyledAvatar>
           </Grid>
@@ -101,13 +97,39 @@ export function PoliticalFigureDescription(
         </Grid>
       );
     } else if (politicalFigureData instanceof Party) {
-      return <h3>TODO</h3>;
+      return (
+        <Grid
+          container
+          direction="column"
+          justify="flex-start"
+          alignItems="stretch"
+          wrap="nowrap"
+          spacing={1}
+        >
+          <Grid item>
+            <Typography variant="h6" align="center">
+              {politicalFigureData.name}
+            </Typography>
+            <Typography variant="body1" align="center">
+              {politicalFigureData.coalition}
+            </Typography>
+          </Grid>
+
+          <Grid container item justify="center">
+            <StyledAvatar alt="avatar" src={politicalFigureData.name}>
+              {politicalFigureData.name[0]}
+            </StyledAvatar>
+          </Grid>
+        </Grid>
+      );
     } else if (politicalFigureData instanceof Coalition) {
       return <h3>TODO</h3>;
     } else {
-      return <Typography variant="h6" align="center">
-      Political figure
-    </Typography>;
+      return (
+        <Typography variant="h6" align="center">
+          Political figure
+        </Typography>
+      );
     }
   }
 
