@@ -6,7 +6,7 @@ import { Route, Switch, useRouteMatch } from "react-router-dom";
 import {
   PoliticalFigureDetail,
   PoliticalFigureDetailType,
-} from "./PoliticalFigureDetail";
+} from "./shared/PoliticalFigureDetail";
 
 export function Politicians() {
   let { path } = useRouteMatch();

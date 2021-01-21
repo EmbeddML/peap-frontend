@@ -6,7 +6,7 @@ import { Route, Switch, useHistory, useRouteMatch } from "react-router-dom";
 import {
   PoliticalFigureDetail,
   PoliticalFigureDetailType,
-} from "./PoliticalFigureDetail";
+} from "./shared/PoliticalFigureDetail";
 import { ButtonBase, Fade, Grid, Grow, Paper, Typography } from "@material-ui/core";
 import styled from "styled-components";
 import { PoliticalFigureDescription } from "./shared/PoliticalFigureDescription";

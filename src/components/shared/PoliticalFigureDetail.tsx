@@ -1,16 +1,16 @@
 import { useParams } from "react-router-dom";
 import { Fade, Grid, Paper, Typography, Grow } from "@material-ui/core";
 import styled from "styled-components";
-import { api } from "../api/api";
+import { api } from "../../api/api";
 import { useCallback, useEffect, useState } from "react";
-import { BarPlot, BarPlotSubject } from "./shared/BarPlot";
-import { PoliticalFigureDescription } from "./shared/PoliticalFigureDescription";
-import { SentimentData, TopicData } from "../models/types";
+import { BarPlot, BarPlotSubject } from "./BarPlot";
+import { PoliticalFigureDescription } from "./PoliticalFigureDescription";
+import { SentimentData, TopicData } from "../../models/types";
 import { forkJoin, of } from "rxjs";
-import { WordCloud } from "./shared/WordCloud";
-import { Coalition, Party, Tweet, TwitterUser, Word } from "../models/model";
-import { TwitterPlot } from "./shared/TwitterPlot";
-import { TweetsList } from "./shared/TweetsList";
+import { WordCloud } from "./WordCloud";
+import { Coalition, Party, Tweet, TwitterUser, Word } from "../../models/model";
+import { TwitterPlot } from "./TwitterPlot";
+import { TweetsList } from "./TweetsList";
 import { Refresh } from "@material-ui/icons";
 import { IconButton } from "@material-ui/core";
 
