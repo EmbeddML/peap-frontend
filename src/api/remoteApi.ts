@@ -1,4 +1,4 @@
-import { Observable } from "rxjs";
+import { forkJoin, Observable } from "rxjs";
 import { fromFetch } from "rxjs/fetch";
 import { map, switchMap } from "rxjs/operators";
 import { Coalition, Party, Tweet, TwitterUser, Word } from "../models/model";
@@ -89,16 +89,27 @@ const TOPIC_WORDS_LINK = (topic_id: string, limit?: string) => {
 };
 
 export class RemoteApi implements Api {
-
   //==========================PARTIES================================
 
   getParty(partyId: string): Observable<Party | undefined> {
-    return fromFetch(PARTY_LINK(partyId)).pipe(
+    const politicians = this.getAllTwitterUsers();
+    const party = fromFetch(PARTY_LINK(partyId)).pipe(
       switchMap((response) => response.json()),
       map(
         (party: any) =>
           new Party(party["party_id"], party["name"], party["coalition"])
       )
+    );
+
+    return forkJoin([politicians, party]).pipe(
+      map(([politicians, party]) => {
+        const partyPoliticians = politicians.filter(politician => politician.party === party.name)
+        party.tweetsCount = partyPoliticians.map(politician => politician.tweets_count).reduce((prevCount, currCount) => prevCount + currCount)
+        party.politiciansCount = partyPoliticians.length
+        party.mostActivePolitician = partyPoliticians.sort((a, b) => b.tweets_count - a.tweets_count)[0]
+
+        return party;
+      })
     );
   }
   getWordsForParty(partyId: string): Observable<Word[]> {
@@ -161,12 +172,27 @@ export class RemoteApi implements Api {
   //==========================COALITIONS================================
 
   getCoalition(coalitionId: string): Observable<Coalition | undefined> {
-    return fromFetch(COALITION_LINK(coalitionId)).pipe(
+    const parties = this.getAllParties();
+    const politicians = this.getAllTwitterUsers();
+    const coalition = fromFetch(COALITION_LINK(coalitionId)).pipe(
       switchMap((response) => response.json()),
       map(
         (coalition: any) =>
           new Coalition(coalition["coalition_id"], coalition["name"])
       )
+    );
+
+    return forkJoin([politicians, parties, coalition]).pipe(
+      map(([politicians, parties, coalition]) => {
+        const coalitionPoliticians = politicians.filter(politician => politician.coalition === coalition.name)
+        const coalitionParties = parties.filter(party => party.coalition === coalition.name)
+        coalition.tweetsCount = coalitionPoliticians.map(politician => politician.tweets_count).reduce((prevCount, currCount) => prevCount + currCount)
+        coalition.politiciansCount = coalitionPoliticians.length
+        coalition.mostActivePolitician = coalitionPoliticians.sort((a, b) => b.tweets_count - a.tweets_count)[0]
+        coalition.partiesCount = coalitionParties.length
+
+        return coalition;
+      })
     );
   }
   getWordsForCoalition(coalitionId: string): Observable<Word[]> {
@@ -196,7 +222,9 @@ export class RemoteApi implements Api {
     topic?: string,
     sentiment?: string
   ): Observable<Tweet[]> {
-    return fromFetch(COALITION_TWEETS_LINK(coalitionId, limit, topic, sentiment)).pipe(
+    return fromFetch(
+      COALITION_TWEETS_LINK(coalitionId, limit, topic, sentiment)
+    ).pipe(
       switchMap((response) => response.json()),
       map((tweets: any[]) =>
         tweets.map((tweet) => {
@@ -226,7 +254,6 @@ export class RemoteApi implements Api {
     );
   }
 
-
   //==========================TOPICS================================
 
   getSentimentsForTopic(topic: string): Observable<SentimentData[]> {
@@ -242,7 +269,6 @@ export class RemoteApi implements Api {
       map((words: any[]) => words as Word[])
     );
   }
-
 
   //==========================USER================================
 

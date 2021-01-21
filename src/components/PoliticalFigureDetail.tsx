@@ -48,7 +48,7 @@ export interface PoliticalFigureDetailProps {
   politicalFigureDetailType: PoliticalFigureDetailType;
   data?: TwitterUser[];
   clusteringProperty?: string;
-  availableClusteringProperties?: string[]
+  availableClusteringProperties?: string[];
 }
 
 export function PoliticalFigureDetail({
@@ -57,10 +57,17 @@ export function PoliticalFigureDetail({
   clusteringProperty = "",
   availableClusteringProperties = [],
 }: PoliticalFigureDetailProps) {
-  const { username, partyId, coalitionId } = useParams<{ username: string, partyId: string, coalitionId: string }>();
+  const { username, partyId, coalitionId } = useParams<{
+    username: string;
+    partyId: string;
+    coalitionId: string;
+  }>();
   const [selectedUser, setSelectedUser] = useState<TwitterUser | null>();
   const [selectedParty, setSelectedParty] = useState<Party | null>();
-  const [selectedCoalition, setSelectedCoalition] = useState<Coalition | null>();
+  const [
+    selectedCoalition,
+    setSelectedCoalition,
+  ] = useState<Coalition | null>();
   const [topicData, setTopicData] = useState<TopicData[]>([]);
   const [sentimentData, setSentimentData] = useState<SentimentData[]>([]);
   const [wordsData, setWordsData] = useState<Word[]>([]);
@@ -70,18 +77,38 @@ export function PoliticalFigureDetail({
 
   const refreshTweetsList = useCallback(() => {
     if (selectedUser) {
-      return api.getTweetsForUser(selectedUser.username, "5", chosenTopic, chosenSentiment);
+      return api.getTweetsForUser(
+        selectedUser.username,
+        "5",
+        chosenTopic,
+        chosenSentiment
+      );
     } else if (selectedParty) {
-      return api.getTweetsForParty(selectedParty.id, "5", chosenTopic, chosenSentiment);
+      return api.getTweetsForParty(
+        selectedParty.id,
+        "5",
+        chosenTopic,
+        chosenSentiment
+      );
     } else if (selectedCoalition) {
-      return api.getTweetsForCoalition(selectedCoalition.id, "5", chosenTopic, chosenSentiment);
+      return api.getTweetsForCoalition(
+        selectedCoalition.id,
+        "5",
+        chosenTopic,
+        chosenSentiment
+      );
     } else {
-      return of([])
+      return of([]);
     }
-  }, [selectedUser, selectedParty, selectedCoalition, chosenTopic, chosenSentiment]);
+  }, [
+    selectedUser,
+    selectedParty,
+    selectedCoalition,
+    chosenTopic,
+    chosenSentiment,
+  ]);
 
   useEffect(() => {
-
     if (username) {
       forkJoin([
         api.getTwitterUser(username),
@@ -123,13 +150,12 @@ export function PoliticalFigureDetail({
         setWordsData(words);
       });
     }
-    
   }, [username, partyId, coalitionId]);
 
   useEffect(() => {
+    setTweetsData([])
     refreshTweetsList().subscribe(setTweetsData);
   }, [refreshTweetsList]);
-
 
   function onTopicColumnClick(label: string) {
     setChosenTopic(label);
@@ -139,116 +165,152 @@ export function PoliticalFigureDetail({
     setChosenSentiment(label);
   }
 
-
-
   return (
     <Fade in={true}>
-      <Grid container>
-        <StyledContainer
-          container
-          direction="row"
-          justify="center"
-          alignItems="center"
-          alignContent="flex-start"
-          wrap="wrap"
-          spacing={0}
-          xl={8}
-        >
-          <Grow in={true}>
-            <StyledItem item xs={11} md={6} xl={6}>
-              <StyledPaper elevation={1}>
-                <PoliticalFigureDescription
-                  politicalFigureData={selectedUser ? selectedUser as TwitterUser : selectedParty ? selectedParty as Party : selectedCoalition ? selectedCoalition as Coalition : null}
-                ></PoliticalFigureDescription>
-              </StyledPaper>
-            </StyledItem>
-          </Grow>
-          <Grow in={true}>
-            <StyledItem item xs={11} md={6} xl={6}>
-              <StyledPaper elevation={1}>
-                <Typography variant="h6" align="center">
-                  Words analysis
-                </Typography>
-                <WordCloud words={wordsData}></WordCloud>
-              </StyledPaper>
-            </StyledItem>
-          </Grow>
-          <Grow in={true}>
-            <StyledItem item xs={11} md={6} xl={6}>
-              <StyledPaper elevation={1}>
-                <Typography variant="h6" align="center">
-                  Topic analysis
-                </Typography>
-                <BarPlot
-                  data={topicData}
-                  onColumnClick={onTopicColumnClick}
-                  initialBarPlotSubject={BarPlotSubject.Topic}
-                ></BarPlot>
-              </StyledPaper>
-            </StyledItem>
-          </Grow>
-          <Grow in={true}>
-            <StyledItem item xs={11} md={6} xl={6}>
-              <StyledPaper elevation={1}>
-                <Typography variant="h6" align="center">
-                  Sentiment analysis
-                </Typography>
-                <BarPlot
-                  data={sentimentData}
-                  onColumnClick={onSentimentColumnClick}
-                  initialBarPlotSubject={BarPlotSubject.Sentiment}
-                ></BarPlot>
-              </StyledPaper>
-            </StyledItem>
-          </Grow>
+      <>
+        <Grow in={true}>
+          <Grid container justify="center" style={{ marginTop: "16px" }}>
+            <Typography variant="h5" align="center">
+              {selectedUser
+                ? "Politician"
+                : selectedParty
+                ? "Party"
+                : selectedCoalition
+                ? "Coalition"
+                : ""}
+            </Typography>
+          </Grid>
+        </Grow>
+        <Grid container>
+          <StyledContainer
+            container
+            direction="row"
+            justify="center"
+            alignItems="center"
+            alignContent="flex-start"
+            wrap="wrap"
+            spacing={0}
+            xl={8}
+          >
+            <Grow in={true}>
+              <StyledItem item xs={11} md={6} xl={6}>
+                <StyledPaper elevation={1}>
+                  <PoliticalFigureDescription
+                    politicalFigureData={
+                      selectedUser
+                        ? (selectedUser as TwitterUser)
+                        : selectedParty
+                        ? (selectedParty as Party)
+                        : selectedCoalition
+                        ? (selectedCoalition as Coalition)
+                        : null
+                    }
+                  ></PoliticalFigureDescription>
+                </StyledPaper>
+              </StyledItem>
+            </Grow>
+            <Grow in={true}>
+              <StyledItem item xs={11} md={6} xl={6}>
+                <StyledPaper elevation={1}>
+                  <Typography variant="h6" align="center">
+                    Words analysis
+                  </Typography>
+                  <WordCloud words={wordsData}></WordCloud>
+                </StyledPaper>
+              </StyledItem>
+            </Grow>
+            <Grow in={true}>
+              <StyledItem item xs={11} md={6} xl={6}>
+                <StyledPaper elevation={1}>
+                  <Typography variant="h6" align="center">
+                    Topic analysis
+                  </Typography>
+                  <BarPlot
+                    data={topicData}
+                    onColumnClick={onTopicColumnClick}
+                    initialBarPlotSubject={BarPlotSubject.Topic}
+                  ></BarPlot>
+                </StyledPaper>
+              </StyledItem>
+            </Grow>
+            <Grow in={true}>
+              <StyledItem item xs={11} md={6} xl={6}>
+                <StyledPaper elevation={1}>
+                  <Typography variant="h6" align="center">
+                    Sentiment analysis
+                  </Typography>
+                  <BarPlot
+                    data={sentimentData}
+                    onColumnClick={onSentimentColumnClick}
+                    initialBarPlotSubject={BarPlotSubject.Sentiment}
+                  ></BarPlot>
+                </StyledPaper>
+              </StyledItem>
+            </Grow>
 
-          {politicalFigureDetailType === PoliticalFigureDetailType.Politician && <Grow in={true}>
-            <StyledItem item xs={11} md={12} lg={8} xl={12}>
-              <PlotPaper elevation={1}>
-                <Typography variant="h6" align="center">
-                  Speech analysis
-                </Typography>
-                <TwitterPlot
-                  data={data as TwitterUser[]}
-                  is_3D={true}
-                  availableClusteringProperties={availableClusteringProperties}
-                  initialClusteringProperty={clusteringProperty}
-                  selectedUsername={username}
-                ></TwitterPlot>
-              </PlotPaper>
-            </StyledItem>
-          </Grow>}
-        </StyledContainer>
-        <StyledContainer
-          container
-          direction="row"
-          justify="center"
-          alignItems="center"
-          alignContent="flex-start"
-          wrap="wrap"
-          spacing={0}
-          xl={4}
-        >
-          <Grow in={true}>
-            <StyledItem item xs={11} md={8} lg={6} xl={12}>
-              <DynamicPaper elevation={1} style={{ position: "relative" }}>
-                {!chosenTopic && <IconButton
-                  aria-label="refresh"
-                  style={{ position: "absolute", top: 0, right: 0 }}
-                  onClick={() => refreshTweetsList().subscribe(setTweetsData)}
-                >
-                  <Refresh fontSize="inherit" />
-                </IconButton>}
-                <Typography variant="h6" align="center">
-                  {chosenTopic ? "Top" : "Random"} Tweets {chosenTopic || chosenSentiment ? "for (" : ""}{chosenTopic ? `Topic ${chosenTopic}` : ""}{chosenTopic && chosenSentiment ? `, ` : ""}{chosenSentiment ? `${chosenSentiment}` : ""}{chosenTopic || chosenSentiment ? ")" : ""}
-                </Typography>
-                <br></br>
-                <TweetsList tweets={tweetsData} />
-              </DynamicPaper>
-            </StyledItem>
-          </Grow>
-        </StyledContainer>
-      </Grid>
+            {politicalFigureDetailType ===
+              PoliticalFigureDetailType.Politician && (
+              <Grow in={true}>
+                <StyledItem item xs={11} md={11} lg={10} xl={12}>
+                  <PlotPaper elevation={1}>
+                    <Typography variant="h6" align="center">
+                      Speech analysis
+                    </Typography>
+                    <TwitterPlot
+                      data={data as TwitterUser[]}
+                      is_3D={true}
+                      availableClusteringProperties={
+                        availableClusteringProperties
+                      }
+                      initialClusteringProperty={clusteringProperty}
+                      selectedUsername={username}
+                    ></TwitterPlot>
+                  </PlotPaper>
+                </StyledItem>
+              </Grow>
+            )}
+          </StyledContainer>
+          <StyledContainer
+            container
+            direction="row"
+            justify="center"
+            alignItems="center"
+            alignContent="flex-start"
+            wrap="wrap"
+            spacing={0}
+            xl={4}
+          >
+            <Grow in={true}>
+              <StyledItem item xs={11} md={8} lg={6} xl={12}>
+                <DynamicPaper elevation={1} style={{ position: "relative" }}>
+                  {!chosenTopic && (
+                    <IconButton
+                      aria-label="refresh"
+                      style={{ position: "absolute", top: 0, right: 0 }}
+                      onClick={() => {
+                        setTweetsData([]);
+                        refreshTweetsList().subscribe(setTweetsData);
+                      }}
+                    >
+                      <Refresh fontSize="inherit" />
+                    </IconButton>
+                  )}
+                  <Typography variant="h6" align="center">
+                    {chosenTopic ? "Top" : "Random"} Tweets{" "}
+                    {chosenTopic || chosenSentiment ? "for (" : ""}
+                    {chosenTopic ? `Topic ${chosenTopic}` : ""}
+                    {chosenTopic && chosenSentiment ? `, ` : ""}
+                    {chosenSentiment ? `${chosenSentiment}` : ""}
+                    {chosenTopic || chosenSentiment ? ")" : ""}
+                  </Typography>
+                  <br></br>
+                  <TweetsList tweets={tweetsData} />
+                </DynamicPaper>
+              </StyledItem>
+            </Grow>
+          </StyledContainer>
+        </Grid>
+      </>
     </Fade>
   );
 }

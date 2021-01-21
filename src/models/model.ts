@@ -35,7 +35,10 @@ export class Party {
   constructor(
     public id: string,
     public name: string,
-    public coalition: string
+    public coalition: string,
+    public politiciansCount: number = 0,
+    public tweetsCount: number = 0,
+    public mostActivePolitician: TwitterUser = {} as TwitterUser
   ) {}
 }
 
@@ -43,6 +46,10 @@ export class Coalition {
   constructor(
     public id: string,
     public name: string,
+    public politiciansCount: number = 0,
+    public tweetsCount: number = 0,
+    public mostActivePolitician: TwitterUser = {} as TwitterUser,
+    public partiesCount: number = 0,
   ) {}
 }
 

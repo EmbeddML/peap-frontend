@@ -16,6 +16,7 @@ import { Link, useHistory } from "react-router-dom";
 import styled from "styled-components";
 import GroupWorkIcon from "@material-ui/icons/GroupWork";
 import AccountTreeIcon from "@material-ui/icons/AccountTree";
+import SubjectIcon from "@material-ui/icons/Subject";
 
 const StyledPaper = styled.div`
   width: 240px;
@@ -54,6 +55,7 @@ const drawerListItems = [
     <AccountTreeIcon />
   ),
   new DrawerListItem("customUser", "/customUser", "You", <PersonAddIcon />),
+  new DrawerListItem("topicAnalysis", "/topics", "Topic Analysis", <SubjectIcon />),
   new DrawerListItem("about", "/about", "About", <InfoIcon />, true),
 ];
 

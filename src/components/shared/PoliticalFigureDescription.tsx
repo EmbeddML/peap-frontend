@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { Divider, Grid, Typography } from "@material-ui/core";
 export interface PoliticalFigureDescriptionProps {
   politicalFigureData: TwitterUser | Party | Coalition | null;
+  dense?: boolean
 }
 
 const StyledAvatar = styled(Avatar)`
@@ -16,6 +17,7 @@ export function PoliticalFigureDescription(
 ) {
   function renderSwitch({
     politicalFigureData,
+    dense = false
   }: PoliticalFigureDescriptionProps) {
     if (politicalFigureData instanceof TwitterUser) {
       return (
@@ -38,7 +40,7 @@ export function PoliticalFigureDescription(
               {politicalFigureData.username}
             </StyledAvatar>
           </Grid>
-          <Grid item>
+          {!dense && <><Grid item>
             <Divider variant="middle"></Divider>
           </Grid>
           <Grid container item justify="center">
@@ -93,7 +95,7 @@ export function PoliticalFigureDescription(
                 </Typography>
               </Grid>
             </Grid>
-          </Grid>
+          </Grid></>}
         </Grid>
       );
     } else if (politicalFigureData instanceof Party) {
@@ -110,9 +112,6 @@ export function PoliticalFigureDescription(
             <Typography variant="h6" align="center">
               {politicalFigureData.name}
             </Typography>
-            <Typography variant="body1" align="center">
-              {politicalFigureData.coalition}
-            </Typography>
           </Grid>
 
           <Grid container item justify="center">
@@ -120,6 +119,56 @@ export function PoliticalFigureDescription(
               {politicalFigureData.name[0]}
             </StyledAvatar>
           </Grid>
+          {!dense && <><Grid item>
+            <Divider variant="middle"></Divider>
+          </Grid>
+          <Grid container item justify="center">
+            <Grid
+              container
+              item
+              xs={11}
+              sm={8}
+              md={11}
+              lg={10}
+              justify="space-between"
+              wrap="nowrap"
+            >
+              <Grid item>
+                <Typography variant="body1" align="left">
+                  <b>Name:</b>
+                </Typography>
+                <Typography variant="body1" align="left">
+                  <b>Coalition:</b>
+                </Typography>
+                <Typography variant="body1" align="left">
+                  <b>Tweets count:</b>
+                </Typography>
+                <Typography variant="body1" align="left">
+                  <b>Politicians count:</b>
+                </Typography>
+                <Typography variant="body1" align="left">
+                  <b>Most active politician:</b>
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography variant="body1" align="right">
+                  {politicalFigureData.name}
+                </Typography>
+                <Typography variant="body1" align="right">
+                  {politicalFigureData.coalition}
+                </Typography>
+                <Typography variant="body1" align="right">
+                  {politicalFigureData.tweetsCount}
+                </Typography>
+                <Typography variant="body1" align="right">
+                  {politicalFigureData.politiciansCount}
+                </Typography>
+                <Typography variant="body1" align="right">
+                  {politicalFigureData.mostActivePolitician.name} ({((politicalFigureData.mostActivePolitician.tweets_count / politicalFigureData.tweetsCount) * 100).toFixed(0)}%)
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid></>}
         </Grid>
       );
     } else if (politicalFigureData instanceof Coalition) {
@@ -143,6 +192,56 @@ export function PoliticalFigureDescription(
               {politicalFigureData.name[0]}
             </StyledAvatar>
           </Grid>
+          {!dense && <><Grid item>
+            <Divider variant="middle"></Divider>
+          </Grid>
+          <Grid container item justify="center">
+            <Grid
+              container
+              item
+              xs={11}
+              sm={8}
+              md={11}
+              lg={10}
+              justify="space-between"
+              wrap="nowrap"
+            >
+              <Grid item>
+                <Typography variant="body1" align="left">
+                  <b>Name:</b>
+                </Typography>
+                <Typography variant="body1" align="left">
+                  <b>Tweets count:</b>
+                </Typography>
+                <Typography variant="body1" align="left">
+                  <b>Parties count:</b>
+                </Typography>
+                <Typography variant="body1" align="left">
+                  <b>Politicians count:</b>
+                </Typography>
+                <Typography variant="body1" align="left">
+                  <b>Most active politician:</b>
+                </Typography>
+              </Grid>
+              <Grid item>
+                <Typography variant="body1" align="right">
+                  {politicalFigureData.name}
+                </Typography>
+                <Typography variant="body1" align="right">
+                  {politicalFigureData.tweetsCount}
+                </Typography>
+                <Typography variant="body1" align="right">
+                  {politicalFigureData.partiesCount}
+                </Typography>
+                <Typography variant="body1" align="right">
+                  {politicalFigureData.politiciansCount}
+                </Typography>
+                <Typography variant="body1" align="right">
+                  {politicalFigureData.mostActivePolitician.name} ({((politicalFigureData.mostActivePolitician.tweets_count / politicalFigureData.tweetsCount) * 100).toFixed(0)}%)
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid></>}
         </Grid>
       );
     } else {

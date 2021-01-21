@@ -75,10 +75,11 @@ export function Coalitions() {
               wrap="wrap"
               spacing={0}
               xs={12}
+              xl={8}
             >
               {coalitions.map((coalition: Coalition) => (
                 <Grow in={true} key={coalition.id}>
-                  <StyledItem item xs={12} sm={6} md={4} lg={3}>
+                  <StyledItem item xs={12} sm={6} md={4}>
                       <StyledButtonBase>
                       <StyledPaper
                         elevation={1}
@@ -86,6 +87,7 @@ export function Coalitions() {
                       >
                         <PoliticalFigureDescription
                           politicalFigureData={coalition}
+                          dense
                         ></PoliticalFigureDescription>
                       </StyledPaper>
                     </StyledButtonBase>

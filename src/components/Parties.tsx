@@ -86,6 +86,7 @@ export function Parties() {
                       >
                         <PoliticalFigureDescription
                           politicalFigureData={party}
+                          dense
                         ></PoliticalFigureDescription>
                       </StyledPaper>
                     </StyledButtonBase>

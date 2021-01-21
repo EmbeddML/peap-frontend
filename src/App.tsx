@@ -73,7 +73,7 @@ function App() {
               </GridAppBar>
             </ClickAwayListener>
 
-            <GridContent container>
+            <GridContent container justify="center" alignContent="flex-start">
               <Switch>
                 <Route path="/politicians">
                   <Politicians />
@@ -83,6 +83,10 @@ function App() {
                 </Route>
                 <Route path="/coalitions">
                   <Coalitions />
+                </Route>
+                <Route path="/topics">
+                  <div>TOPICS</div>
+                  {/* <About /> */}
                 </Route>
                 <Route path="/about">
                   <About />

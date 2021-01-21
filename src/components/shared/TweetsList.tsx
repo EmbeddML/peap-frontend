@@ -1,6 +1,6 @@
 import { Tweet } from "../../models/model";
 import { Tweet as TweetComponent } from "react-twitter-widgets";
-import { Divider, Grid, Typography } from "@material-ui/core";
+import { CircularProgress, Divider, Grid, Typography } from "@material-ui/core";
 import styled from "styled-components";
 import { Fragment } from "react";
 
@@ -32,6 +32,7 @@ export function TweetsList({ tweets }: TweetsListProps) {
       alignContent="stretch"
       wrap="nowrap"
     >
+      {tweets.length === 0 && <Grid container justify="center" style={{padding: "16px"}}><CircularProgress size={80}/></Grid>}
       {tweets.map((tweet: Tweet, index: number, arr: Tweet[]) => (
         <Fragment key={tweet.id.toString()}>
           <Grid container justify="space-around">
