@@ -1,5 +1,5 @@
 import { Observable } from "rxjs";
-import { Party, Tweet, TwitterUser, Word } from "../models/model";
+import { Coalition, Party, Tweet, TwitterUser, Word } from "../models/model";
 import { SentimentData, TopicData } from "../models/types";
 import { DummyApi } from "./dummyApi";
 import { RemoteApi } from "./remoteApi";
@@ -24,6 +24,28 @@ export interface Api {
   getSentimentsForTopic(topic: string): Observable<SentimentData[]>;
 
   getAllParties(): Observable<Party[]>;
+  getParty(partyId: string): Observable<Party | undefined>;
+  getTopicsForParty(partyId: string): Observable<TopicData[]>;
+  getSentimentsForParty(partyId: string): Observable<SentimentData[]>;
+  getWordsForParty(partyId: string): Observable<Word[]>;
+  getTweetsForParty(
+    partyId: string,
+    limit?: string,
+    topic?: string,
+    sentiment?: string
+  ): Observable<Tweet[]>;
+
+  getAllCoalitions(): Observable<Coalition[]>;
+  getCoalition(coalitionId: string): Observable<Coalition | undefined>;
+  getTopicsForCoalition(coalitionId: string): Observable<TopicData[]>;
+  getSentimentsForCoalition(coalitionId: string): Observable<SentimentData[]>;
+  getWordsForCoalition(coalitionId: string): Observable<Word[]>;
+  getTweetsForCoalition(
+    coalitionId: string,
+    limit?: string,
+    topic?: string,
+    sentiment?: string
+  ): Observable<Tweet[]>;
 
 }
 

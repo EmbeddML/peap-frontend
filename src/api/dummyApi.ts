@@ -1,9 +1,42 @@
 import { Observable, of } from "rxjs";
-import { Party, Tweet, TwitterUser, Word } from "../models/model";
+import { Coalition, Party, Tweet, TwitterUser, Word } from "../models/model";
 import { SentimentData, TopicData } from "../models/types";
 import { Api } from "./api";
 
 export class DummyApi implements Api {
+  getParty(partyId: string): Observable<Party | undefined> {
+    throw new Error("Method not implemented.");
+  }
+  getTopicsForParty(partyId: string): Observable<TopicData[]> {
+    throw new Error("Method not implemented.");
+  }
+  getSentimentsForParty(partyId: string): Observable<SentimentData[]> {
+    throw new Error("Method not implemented.");
+  }
+  getWordsForParty(partyId: string): Observable<Word[]> {
+    throw new Error("Method not implemented.");
+  }
+  getTweetsForParty(partyId: string, limit?: string, topic?: string, sentiment?: string): Observable<Tweet[]> {
+    throw new Error("Method not implemented.");
+  }
+  getAllCoalitions(): Observable<Coalition[]> {
+    throw new Error("Method not implemented.");
+  }
+  getCoalition(coalitionId: string): Observable<Coalition | undefined> {
+    throw new Error("Method not implemented.");
+  }
+  getTopicsForCoalition(coalitionId: string): Observable<TopicData[]> {
+    throw new Error("Method not implemented.");
+  }
+  getSentimentsForCoalition(coalitionId: string): Observable<SentimentData[]> {
+    throw new Error("Method not implemented.");
+  }
+  getWordsForCoalition(coalitionId: string): Observable<Word[]> {
+    throw new Error("Method not implemented.");
+  }
+  getTweetsForCoalition(coalitionId: string, limit?: string, topic?: string, sentiment?: string): Observable<Tweet[]> {
+    throw new Error("Method not implemented.");
+  }
   getAllParties(): Observable<Party[]> {
     throw new Error("Method not implemented.");
   }

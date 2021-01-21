@@ -21,7 +21,7 @@ export function WordCloud({ words }: WordCloudProps) {
     enableOptimizations: true,
     padding: 2,
     scale: "log",
-    fontSizes: [10, 60] as MinMaxPair
+    fontSizes: [10, 40] as MinMaxPair
   };
 
   return (

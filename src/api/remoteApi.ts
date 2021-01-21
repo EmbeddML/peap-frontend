@@ -1,7 +1,7 @@
 import { Observable } from "rxjs";
 import { fromFetch } from "rxjs/fetch";
-import { map, switchMap, tap } from "rxjs/operators";
-import { Party, Tweet, TwitterUser, Word } from "../models/model";
+import { map, switchMap } from "rxjs/operators";
+import { Coalition, Party, Tweet, TwitterUser, Word } from "../models/model";
 import { SentimentData, TopicData } from "../models/types";
 import { Api } from "./api";
 
@@ -32,8 +32,52 @@ const USER_TWEETS_LINK = (
 };
 
 const ALL_PARTIES_LINK = `${BACKEND_API_URL}/party`;
+const PARTY_LINK = (partyId: string) => `${ALL_PARTIES_LINK}/${partyId}`;
+const PARTY_TOPICS_LINK = (partyId: string) => `${PARTY_LINK(partyId)}/topic`;
+const PARTY_SENTIMENTS_LINK = (partyId: string) =>
+  `${PARTY_LINK(partyId)}/sentiment`;
+const PARTY_WORDS_LINK = (partyId: string, limit?: string) => {
+  let link = `${PARTY_LINK(partyId)}/word?`;
+  link += limit ? `limit=${limit}&` : "";
+  return link;
+};
+const PARTY_TWEETS_LINK = (
+  partyId: string,
+  limit?: string,
+  topic?: string,
+  sentiment?: string
+) => {
+  let link = `${PARTY_LINK(partyId)}/tweets?`;
+  link += limit ? `limit=${limit}&` : "";
+  link += topic ? `topic=${topic}&` : "";
+  link += sentiment ? `sentiment=${sentiment}&` : "";
+  return link;
+};
 
-const ALL_COALITIONS_LINK = `${BACKEND_API_URL}/coalitions`;
+const ALL_COALITIONS_LINK = `${BACKEND_API_URL}/coalition`;
+const COALITION_LINK = (coalitionId: string) =>
+  `${ALL_COALITIONS_LINK}/${coalitionId}`;
+const COALITION_TOPICS_LINK = (coalitionId: string) =>
+  `${COALITION_LINK(coalitionId)}/topic`;
+const COALITION_SENTIMENTS_LINK = (coalitionId: string) =>
+  `${COALITION_LINK(coalitionId)}/sentiment`;
+const COALITION_WORDS_LINK = (coalitionId: string, limit?: string) => {
+  let link = `${COALITION_LINK(coalitionId)}/word?`;
+  link += limit ? `limit=${limit}&` : "";
+  return link;
+};
+const COALITION_TWEETS_LINK = (
+  coalitionId: string,
+  limit?: string,
+  topic?: string,
+  sentiment?: string
+) => {
+  let link = `${COALITION_LINK(coalitionId)}/tweets?`;
+  link += limit ? `limit=${limit}&` : "";
+  link += topic ? `topic=${topic}&` : "";
+  link += sentiment ? `sentiment=${sentiment}&` : "";
+  return link;
+};
 
 const TOPIC_LINK = (topic_id: string) => `${BACKEND_API_URL}/topic/${topic_id}`;
 const TOPIC_SENTIMENTS_LINK = (topic_id: string) =>
@@ -45,6 +89,63 @@ const TOPIC_WORDS_LINK = (topic_id: string, limit?: string) => {
 };
 
 export class RemoteApi implements Api {
+
+  //==========================PARTIES================================
+
+  getParty(partyId: string): Observable<Party | undefined> {
+    return fromFetch(PARTY_LINK(partyId)).pipe(
+      switchMap((response) => response.json()),
+      map(
+        (party: any) =>
+          new Party(party["party_id"], party["name"], party["coalition"])
+      )
+    );
+  }
+  getWordsForParty(partyId: string): Observable<Word[]> {
+    return fromFetch(PARTY_WORDS_LINK(partyId)).pipe(
+      switchMap((response) => response.json()),
+      map((words: any[]) => words as Word[])
+    );
+  }
+  getSentimentsForParty(partyId: string): Observable<SentimentData[]> {
+    return fromFetch(PARTY_SENTIMENTS_LINK(partyId)).pipe(
+      switchMap((response) => response.json()),
+      map((sentiments: any[]) => sentiments as SentimentData[])
+    );
+  }
+
+  getTopicsForParty(partyId: string): Observable<TopicData[]> {
+    return fromFetch(PARTY_TOPICS_LINK(partyId)).pipe(
+      switchMap((response) => response.json()),
+      map((topics: any[]) =>
+        topics.map((obj: any) => [obj.topic, obj.part] as TopicData)
+      )
+    );
+  }
+  getTweetsForParty(
+    partyId: string,
+    limit?: string,
+    topic?: string,
+    sentiment?: string
+  ): Observable<Tweet[]> {
+    return fromFetch(PARTY_TWEETS_LINK(partyId, limit, topic, sentiment)).pipe(
+      switchMap((response) => response.json()),
+      map((tweets: any[]) =>
+        tweets.map((tweet) => {
+          const linkSplit: string[] = tweet["twitter_link"].split("/");
+          const id: string = linkSplit[linkSplit.length - 1];
+          return new Tweet(
+            id,
+            tweet["twitter_link"],
+            tweet["username"],
+            tweet["tweet_text"],
+            [tweet["topic"], tweet["topic_proba"]] as TopicData,
+            tweet["sentiment"]
+          );
+        })
+      )
+    );
+  }
   getAllParties(): Observable<Party[]> {
     return fromFetch(ALL_PARTIES_LINK).pipe(
       switchMap((response) => response.json()),
@@ -56,6 +157,78 @@ export class RemoteApi implements Api {
       )
     );
   }
+
+  //==========================COALITIONS================================
+
+  getCoalition(coalitionId: string): Observable<Coalition | undefined> {
+    return fromFetch(COALITION_LINK(coalitionId)).pipe(
+      switchMap((response) => response.json()),
+      map(
+        (coalition: any) =>
+          new Coalition(coalition["coalition_id"], coalition["name"])
+      )
+    );
+  }
+  getWordsForCoalition(coalitionId: string): Observable<Word[]> {
+    return fromFetch(COALITION_WORDS_LINK(coalitionId)).pipe(
+      switchMap((response) => response.json()),
+      map((words: any[]) => words as Word[])
+    );
+  }
+  getSentimentsForCoalition(coalitionId: string): Observable<SentimentData[]> {
+    return fromFetch(COALITION_SENTIMENTS_LINK(coalitionId)).pipe(
+      switchMap((response) => response.json()),
+      map((sentiments: any[]) => sentiments as SentimentData[])
+    );
+  }
+
+  getTopicsForCoalition(coalitionId: string): Observable<TopicData[]> {
+    return fromFetch(COALITION_TOPICS_LINK(coalitionId)).pipe(
+      switchMap((response) => response.json()),
+      map((topics: any[]) =>
+        topics.map((obj: any) => [obj.topic, obj.part] as TopicData)
+      )
+    );
+  }
+  getTweetsForCoalition(
+    coalitionId: string,
+    limit?: string,
+    topic?: string,
+    sentiment?: string
+  ): Observable<Tweet[]> {
+    return fromFetch(COALITION_TWEETS_LINK(coalitionId, limit, topic, sentiment)).pipe(
+      switchMap((response) => response.json()),
+      map((tweets: any[]) =>
+        tweets.map((tweet) => {
+          const linkSplit: string[] = tweet["twitter_link"].split("/");
+          const id: string = linkSplit[linkSplit.length - 1];
+          return new Tweet(
+            id,
+            tweet["twitter_link"],
+            tweet["username"],
+            tweet["tweet_text"],
+            [tweet["topic"], tweet["topic_proba"]] as TopicData,
+            tweet["sentiment"]
+          );
+        })
+      )
+    );
+  }
+  getAllCoalitions(): Observable<Coalition[]> {
+    return fromFetch(ALL_COALITIONS_LINK).pipe(
+      switchMap((response) => response.json()),
+      map((coalitions: any[]) =>
+        coalitions.map(
+          (coalition) =>
+            new Coalition(coalition["coalition_id"], coalition["name"])
+        )
+      )
+    );
+  }
+
+
+  //==========================TOPICS================================
+
   getSentimentsForTopic(topic: string): Observable<SentimentData[]> {
     return fromFetch(TOPIC_SENTIMENTS_LINK(topic)).pipe(
       switchMap((response) => response.json()),
@@ -69,6 +242,9 @@ export class RemoteApi implements Api {
       map((words: any[]) => words as Word[])
     );
   }
+
+
+  //==========================USER================================
 
   getTweetsForUser(
     username: string,

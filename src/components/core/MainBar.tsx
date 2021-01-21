@@ -8,14 +8,13 @@ import {
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import SearchIcon from "@material-ui/icons/Search";
-import InputBase from "@material-ui/core/InputBase";
 import TextField from "@material-ui/core/TextField";
 import styled from "styled-components";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { TwitterUser } from "../../models/model";
 import { api } from "../../api/api";
-import { useHistory, useRouteMatch } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 
 const StyledTextField = styled(TextField)`

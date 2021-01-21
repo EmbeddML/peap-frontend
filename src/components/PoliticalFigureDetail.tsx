@@ -6,9 +6,9 @@ import { useCallback, useEffect, useState } from "react";
 import { BarPlot, BarPlotSubject } from "./shared/BarPlot";
 import { PoliticalFigureDescription } from "./shared/PoliticalFigureDescription";
 import { SentimentData, TopicData } from "../models/types";
-import { forkJoin } from "rxjs";
+import { forkJoin, of } from "rxjs";
 import { WordCloud } from "./shared/WordCloud";
-import { Tweet, TwitterUser, Word } from "../models/model";
+import { Coalition, Party, Tweet, TwitterUser, Word } from "../models/model";
 import { TwitterPlot } from "./shared/TwitterPlot";
 import { TweetsList } from "./shared/TweetsList";
 import { Refresh } from "@material-ui/icons";
@@ -46,19 +46,21 @@ export enum PoliticalFigureDetailType {
 
 export interface PoliticalFigureDetailProps {
   politicalFigureDetailType: PoliticalFigureDetailType;
-  data: TwitterUser[];
+  data?: TwitterUser[];
   clusteringProperty?: string;
   availableClusteringProperties?: string[]
 }
 
 export function PoliticalFigureDetail({
   politicalFigureDetailType,
-  data,
+  data = [],
   clusteringProperty = "",
   availableClusteringProperties = [],
 }: PoliticalFigureDetailProps) {
-  const { username } = useParams<{ username: string }>();
+  const { username, partyId, coalitionId } = useParams<{ username: string, partyId: string, coalitionId: string }>();
   const [selectedUser, setSelectedUser] = useState<TwitterUser | null>();
+  const [selectedParty, setSelectedParty] = useState<Party | null>();
+  const [selectedCoalition, setSelectedCoalition] = useState<Coalition | null>();
   const [topicData, setTopicData] = useState<TopicData[]>([]);
   const [sentimentData, setSentimentData] = useState<SentimentData[]>([]);
   const [wordsData, setWordsData] = useState<Word[]>([]);
@@ -67,26 +69,62 @@ export function PoliticalFigureDetail({
   const [chosenSentiment, setChosenSentiment] = useState<string>("");
 
   const refreshTweetsList = useCallback(() => {
-    return api.getTweetsForUser(username, "5", chosenTopic, chosenSentiment);
-  }, [username, chosenTopic, chosenSentiment]);
+    if (selectedUser) {
+      return api.getTweetsForUser(selectedUser.username, "5", chosenTopic, chosenSentiment);
+    } else if (selectedParty) {
+      return api.getTweetsForParty(selectedParty.id, "5", chosenTopic, chosenSentiment);
+    } else if (selectedCoalition) {
+      return api.getTweetsForCoalition(selectedCoalition.id, "5", chosenTopic, chosenSentiment);
+    } else {
+      return of([])
+    }
+  }, [selectedUser, selectedParty, selectedCoalition, chosenTopic, chosenSentiment]);
 
   useEffect(() => {
-    forkJoin({
-      user: api.getTwitterUser(username),
-      userPhotoUrl: api.getPhotoUrlForUser(username),
-      topics: api.getTopicsForUser(username),
-      sentiments: api.getSentimentsForUser(username),
-      words: api.getWordsForUser(username),
-    }).subscribe(({ user, userPhotoUrl, topics, sentiments, words }) => {
-      if (user) {
-        user.photoUrl = userPhotoUrl;
-        setSelectedUser(user);
-      }
-      setTopicData(topics);
-      setSentimentData(sentiments);
-      setWordsData(words);
-    });
-  }, [username]);
+
+    if (username) {
+      forkJoin([
+        api.getTwitterUser(username),
+        api.getPhotoUrlForUser(username),
+        api.getTopicsForUser(username),
+        api.getSentimentsForUser(username),
+        api.getWordsForUser(username),
+      ]).subscribe(([user, userPhotoUrl, topics, sentiments, words]) => {
+        if (user) {
+          user.photoUrl = userPhotoUrl;
+          setSelectedUser(user);
+        }
+        setTopicData(topics);
+        setSentimentData(sentiments);
+        setWordsData(words);
+      });
+    } else if (partyId) {
+      forkJoin([
+        api.getParty(partyId),
+        api.getTopicsForParty(partyId),
+        api.getSentimentsForParty(partyId),
+        api.getWordsForParty(partyId),
+      ]).subscribe(([party, topics, sentiments, words]) => {
+        setSelectedParty(party);
+        setTopicData(topics);
+        setSentimentData(sentiments);
+        setWordsData(words);
+      });
+    } else if (coalitionId) {
+      forkJoin([
+        api.getCoalition(coalitionId),
+        api.getTopicsForCoalition(coalitionId),
+        api.getSentimentsForCoalition(coalitionId),
+        api.getWordsForCoalition(coalitionId),
+      ]).subscribe(([coalition, topics, sentiments, words]) => {
+        setSelectedCoalition(coalition);
+        setTopicData(topics);
+        setSentimentData(sentiments);
+        setWordsData(words);
+      });
+    }
+    
+  }, [username, partyId, coalitionId]);
 
   useEffect(() => {
     refreshTweetsList().subscribe(setTweetsData);
@@ -120,7 +158,7 @@ export function PoliticalFigureDetail({
             <StyledItem item xs={11} md={6} xl={6}>
               <StyledPaper elevation={1}>
                 <PoliticalFigureDescription
-                  politicalFigureData={selectedUser as TwitterUser}
+                  politicalFigureData={selectedUser ? selectedUser as TwitterUser : selectedParty ? selectedParty as Party : selectedCoalition ? selectedCoalition as Coalition : null}
                 ></PoliticalFigureDescription>
               </StyledPaper>
             </StyledItem>
@@ -164,14 +202,14 @@ export function PoliticalFigureDetail({
             </StyledItem>
           </Grow>
 
-          <Grow in={true}>
+          {politicalFigureDetailType === PoliticalFigureDetailType.Politician && <Grow in={true}>
             <StyledItem item xs={11} md={12} lg={8} xl={12}>
               <PlotPaper elevation={1}>
                 <Typography variant="h6" align="center">
                   Speech analysis
                 </Typography>
                 <TwitterPlot
-                  data={data}
+                  data={data as TwitterUser[]}
                   is_3D={true}
                   availableClusteringProperties={availableClusteringProperties}
                   initialClusteringProperty={clusteringProperty}
@@ -179,7 +217,7 @@ export function PoliticalFigureDetail({
                 ></TwitterPlot>
               </PlotPaper>
             </StyledItem>
-          </Grow>
+          </Grow>}
         </StyledContainer>
         <StyledContainer
           container

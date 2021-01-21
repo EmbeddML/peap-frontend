@@ -123,7 +123,28 @@ export function PoliticalFigureDescription(
         </Grid>
       );
     } else if (politicalFigureData instanceof Coalition) {
-      return <h3>TODO</h3>;
+      return (
+        <Grid
+          container
+          direction="column"
+          justify="flex-start"
+          alignItems="stretch"
+          wrap="nowrap"
+          spacing={1}
+        >
+          <Grid item>
+            <Typography variant="h6" align="center">
+              {politicalFigureData.name}
+            </Typography>
+          </Grid>
+
+          <Grid container item justify="center">
+            <StyledAvatar alt="avatar" src={politicalFigureData.name}>
+              {politicalFigureData.name[0]}
+            </StyledAvatar>
+          </Grid>
+        </Grid>
+      );
     } else {
       return (
         <Typography variant="h6" align="center">
