@@ -17,6 +17,7 @@ import styled from "styled-components";
 import GroupWorkIcon from "@material-ui/icons/GroupWork";
 import AccountTreeIcon from "@material-ui/icons/AccountTree";
 import SubjectIcon from "@material-ui/icons/Subject";
+import { Textsms } from "@material-ui/icons";
 
 const StyledPaper = styled.div`
   width: 240px;
@@ -54,8 +55,8 @@ const drawerListItems = [
     "Coalitions",
     <AccountTreeIcon />
   ),
+  new DrawerListItem("topics", "/topics", "Topics", <Textsms />),
   new DrawerListItem("customUser", "/customUser", "You", <PersonAddIcon />),
-  new DrawerListItem("topicAnalysis", "/topics", "Topic Analysis", <SubjectIcon />),
   new DrawerListItem("about", "/about", "About", <InfoIcon />, true),
 ];
 

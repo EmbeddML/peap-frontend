@@ -1,6 +1,6 @@
 import { forkJoin, Observable } from "rxjs";
 import { fromFetch } from "rxjs/fetch";
-import { map, switchMap } from "rxjs/operators";
+import { map, switchMap, tap } from "rxjs/operators";
 import { Coalition, Party, Tweet, TwitterUser, Word } from "../models/model";
 import { SentimentData, TopicData } from "../models/types";
 import { Api } from "./api";
@@ -79,7 +79,8 @@ const COALITION_TWEETS_LINK = (
   return link;
 };
 
-const TOPIC_LINK = (topic_id: string) => `${BACKEND_API_URL}/topic/${topic_id}`;
+const ALL_TOPICS_LINK = `${BACKEND_API_URL}/topic`;
+const TOPIC_LINK = (topic_id: string) => `${ALL_TOPICS_LINK}/${topic_id}`;
 const TOPIC_SENTIMENTS_LINK = (topic_id: string) =>
   `${TOPIC_LINK(topic_id)}/sentiment`;
 const TOPIC_WORDS_LINK = (topic_id: string, limit?: string) => {
@@ -87,8 +88,14 @@ const TOPIC_WORDS_LINK = (topic_id: string, limit?: string) => {
   link += limit ? `limit=${limit}&` : "";
   return link;
 };
+const TOPIC_TWEETS_LINK = (topic_id: string, limit?: string) => {
+  let link = `${TOPIC_LINK(topic_id)}/tweets?`;
+  link += limit ? `limit=${limit}&` : "";
+  return link;
+};
 
 export class RemoteApi implements Api {
+
   //==========================PARTIES================================
 
   getParty(partyId: string): Observable<Party | undefined> {
@@ -268,6 +275,33 @@ export class RemoteApi implements Api {
       switchMap((response) => response.json()),
       map((words: any[]) => words as Word[])
     );
+  }
+
+  getTweetsForTopic(topic: string, limit?: string): Observable<Tweet[]> {
+    return fromFetch(TOPIC_TWEETS_LINK(topic, limit)).pipe(
+      switchMap((response) => response.json()),
+      map((tweets: any[]) =>
+        tweets.map((tweet) => {
+          const linkSplit: string[] = tweet["twitter_link"].split("/");
+          const id: string = linkSplit[linkSplit.length - 1];
+          return new Tweet(
+            id,
+            tweet["twitter_link"],
+            tweet["username"],
+            tweet["tweet_text"],
+            [tweet["topic"], tweet["topic_proba"]] as TopicData,
+            tweet["sentiment"]
+          );
+        })
+      )
+    );
+  }
+
+  getTopics(): Observable<string[]> {
+    return fromFetch(ALL_TOPICS_LINK).pipe(
+      switchMap((response) => response.json()),
+      map((topics: any[]) => topics as string[])
+    )
   }
 
   //==========================USER================================

@@ -13,14 +13,15 @@ import {
   Route,
   Redirect,
 } from "react-router-dom";
-import styled, {ThemeProvider} from "styled-components";
+import styled, { ThemeProvider } from "styled-components";
 import { Politicians } from "./components/Politicians";
 import { MainBar } from "./components/core/MainBar";
 import { Sidebar } from "./components/core/Sidebar";
-import type from '@material-ui/lab/themeAugmentation';
+import type from "@material-ui/lab/themeAugmentation";
 import { About } from "./components/About";
 import { Parties } from "./components/Parties";
 import { Coalitions } from "./components/Coalitions";
+import { Topics } from "./components/Topics";
 
 const GridAppBar = styled(Grid)`
   flex: 0 0 auto;
@@ -56,48 +57,47 @@ function App() {
   return (
     <StylesProvider injectFirst>
       <MuiThemeProvider theme={theme}>
-      <ThemeProvider theme={theme}>
-        <Router>
-          <CssBaseline />
-          <Grid
-            container
-            direction="column"
-            justify="flex-start"
-            alignItems="stretch"
-            wrap="nowrap"
-            spacing={0}
-          >
-            <ClickAwayListener onClickAway={handleSidebarClose}>
-              <GridAppBar item>
-                <MainBar handleSidebarOpen={handleSidebarOpen}></MainBar>
-              </GridAppBar>
-            </ClickAwayListener>
+        <ThemeProvider theme={theme}>
+          <Router>
+            <CssBaseline />
+            <Grid
+              container
+              direction="column"
+              justify="flex-start"
+              alignItems="stretch"
+              wrap="nowrap"
+              spacing={0}
+            >
+              <ClickAwayListener onClickAway={handleSidebarClose}>
+                <GridAppBar item>
+                  <MainBar handleSidebarOpen={handleSidebarOpen}></MainBar>
+                </GridAppBar>
+              </ClickAwayListener>
 
-            <GridContent container justify="center" alignContent="flex-start">
-              <Switch>
-                <Route path="/politicians">
-                  <Politicians />
-                </Route>
-                <Route path="/parties">
-                  <Parties />
-                </Route>
-                <Route path="/coalitions">
-                  <Coalitions />
-                </Route>
-                <Route path="/topics">
-                  <div>TOPICS</div>
-                  {/* <About /> */}
-                </Route>
-                <Route path="/about">
-                  <About />
-                </Route>
-                <Redirect to="/politicians" />
-              </Switch>
-            </GridContent>
-          </Grid>
-          <Sidebar {...{ sidebarOpen, handleSidebarClose }}></Sidebar>
-        </Router>
-      </ThemeProvider>
+              <GridContent container justify="center" alignContent="flex-start">
+                <Switch>
+                  <Route path="/politicians">
+                    <Politicians />
+                  </Route>
+                  <Route path="/parties">
+                    <Parties />
+                  </Route>
+                  <Route path="/coalitions">
+                    <Coalitions />
+                  </Route>
+                  <Route path="/topics">
+                    <Topics />
+                  </Route>
+                  <Route path="/about">
+                    <About />
+                  </Route>
+                  <Redirect to="/politicians" />
+                </Switch>
+              </GridContent>
+            </Grid>
+            <Sidebar {...{ sidebarOpen, handleSidebarClose }}></Sidebar>
+          </Router>
+        </ThemeProvider>
       </MuiThemeProvider>
     </StylesProvider>
   );

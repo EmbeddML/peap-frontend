@@ -4,12 +4,13 @@ import {
   Grid,
   Typography,
   Grow,
+  Tooltip,
 } from "@material-ui/core";
 import styled from "styled-components";
-import filip from "../assets/creators/filip.png"
-import kacper from "../assets/creators/kacper.png"
-import piotrek from "../assets/creators/piotrek.png"
-import szymon from "../assets/creators/szymon.png"
+import filip from "../assets/creators/filip.png";
+import kacper from "../assets/creators/kacper.png";
+import piotrek from "../assets/creators/piotrek.png";
+import szymon from "../assets/creators/szymon.png";
 
 const StyledContainer = styled(Grid)`
   padding: 16px;
@@ -100,7 +101,7 @@ export function About() {
           style={{ padding: "16px", paddingBottom: "32px" }}
         >
           <Typography variant="subtitle1" align="center">
-            Credits:
+            Icon credits:
           </Typography>
           <Typography variant="caption" align="center">
             Icons made by{" "}
@@ -150,8 +151,11 @@ export function About() {
           spacing={0}
         >
           <Typography variant="caption" align="center">
-            Made for Social Media Analysis (SMA) at{" "}
-            <a href="http://pwr.edu.pl/en/">WUST</a> with ❤️
+            Made for Social Media Analysis at{" "}
+            <a href="http://pwr.edu.pl/en/">WUST</a> with{" "}
+            <Tooltip title="xD">
+              <span>❤️</span>
+            </Tooltip>
           </Typography>
         </Grid>
       </StyledContainer>

@@ -38,7 +38,7 @@ export function TweetsList({ tweets }: TweetsListProps) {
           <Grid container justify="space-around">
             <div></div>
             <Typography variant="body2" align="center">
-              Topic: <b>{tweet.topic[0]}</b>
+              Topic: <b>{tweet.topic[0]} ({(tweet.topic[1] * 100).toFixed(0)}%)</b>
             </Typography>
             <Typography variant="body2" align="center">
               Sentiment: <b>{tweet.sentiment.toUpperCase()}</b>

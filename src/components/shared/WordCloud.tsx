@@ -20,13 +20,17 @@ export function WordCloud({ words }: WordCloudProps) {
     randomSeed: "42",
     enableOptimizations: true,
     padding: 2,
-    scale: "log",
-    fontSizes: [10, 40] as MinMaxPair
+    scale: "sqrt",
+    fontSizes: [13, 40] as MinMaxPair
   };
 
+  
   return (
     <StyledContainer>
-      <ReactWordcloud words={words} options={options} />
+      <ReactWordcloud words={words.map(word => {
+        word.value = Math.floor(word.value);
+        return word
+      })} options={options} />
     </StyledContainer>
   );
 }

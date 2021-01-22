@@ -22,6 +22,8 @@ export interface Api {
 
   getWordsForTopic(topic: string, limit?: string): Observable<Word[]>;
   getSentimentsForTopic(topic: string): Observable<SentimentData[]>;
+  getTweetsForTopic(topic: string, limit?: string): Observable<Tweet[]>;
+  getTopics(): Observable<string[]>;
 
   getAllParties(): Observable<Party[]>;
   getParty(partyId: string): Observable<Party | undefined>;

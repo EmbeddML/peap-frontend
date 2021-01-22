@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useHistory, useParams, useRouteMatch } from "react-router-dom";
 import { Fade, Grid, Paper, Typography, Grow } from "@material-ui/core";
 import styled from "styled-components";
 import { api } from "../../api/api";
@@ -12,7 +12,13 @@ import { Coalition, Party, Tweet, TwitterUser, Word } from "../../models/model";
 import { TwitterPlot } from "./TwitterPlot";
 import { TweetsList } from "./TweetsList";
 import { Refresh } from "@material-ui/icons";
-import { IconButton } from "@material-ui/core";
+import {
+  IconButton,
+  Select,
+  InputLabel,
+  FormControl,
+  MenuItem,
+} from "@material-ui/core";
 
 const StyledContainer = styled(Grid)`
   padding: 8px;
@@ -42,6 +48,7 @@ export enum PoliticalFigureDetailType {
   Politician,
   Party,
   Coalition,
+  Topic,
 }
 
 export interface PoliticalFigureDetailProps {
@@ -57,10 +64,13 @@ export function PoliticalFigureDetail({
   clusteringProperty = "",
   availableClusteringProperties = [],
 }: PoliticalFigureDetailProps) {
-  const { username, partyId, coalitionId } = useParams<{
+  const history = useHistory();
+  let { path } = useRouteMatch();
+  const { username, partyId, coalitionId, topicId } = useParams<{
     username: string;
     partyId: string;
     coalitionId: string;
+    topicId: string;
   }>();
   const [selectedUser, setSelectedUser] = useState<TwitterUser | null>();
   const [selectedParty, setSelectedParty] = useState<Party | null>();
@@ -68,6 +78,7 @@ export function PoliticalFigureDetail({
     selectedCoalition,
     setSelectedCoalition,
   ] = useState<Coalition | null>();
+  const [allTopics, setAllTopics] = useState<string[]>([]);
   const [topicData, setTopicData] = useState<TopicData[]>([]);
   const [sentimentData, setSentimentData] = useState<SentimentData[]>([]);
   const [wordsData, setWordsData] = useState<Word[]>([]);
@@ -97,6 +108,8 @@ export function PoliticalFigureDetail({
         chosenTopic,
         chosenSentiment
       );
+    } else if (topicId) {
+      return api.getTweetsForTopic(topicId, "15");
     } else {
       return of([]);
     }
@@ -104,6 +117,7 @@ export function PoliticalFigureDetail({
     selectedUser,
     selectedParty,
     selectedCoalition,
+    topicId,
     chosenTopic,
     chosenSentiment,
   ]);
@@ -149,11 +163,25 @@ export function PoliticalFigureDetail({
         setSentimentData(sentiments);
         setWordsData(words);
       });
+    } else if (topicId) {
+      forkJoin([
+        api.getSentimentsForTopic(topicId),
+        api.getWordsForTopic(topicId),
+      ]).subscribe(([sentiments, words]) => {
+        setSentimentData(sentiments);
+        setWordsData(words);
+      });
     }
-  }, [username, partyId, coalitionId]);
+  }, [username, partyId, coalitionId, topicId]);
 
   useEffect(() => {
-    setTweetsData([])
+    if (topicId) {
+      api.getTopics().subscribe(setAllTopics);
+    }
+  }, [topicId]);
+
+  useEffect(() => {
+    setTweetsData([]);
     refreshTweetsList().subscribe(setTweetsData);
   }, [refreshTweetsList]);
 
@@ -177,8 +205,29 @@ export function PoliticalFigureDetail({
                 ? "Party"
                 : selectedCoalition
                 ? "Coalition"
+                : topicId
+                ? "Topic"
                 : ""}
             </Typography>
+            {topicId && (
+              <FormControl style={{marginLeft: "16px"}}>
+                <Select
+                  id="topic-select"
+                  
+                  value={topicId}
+                  onChange={(event) => {
+                    const value = event.target.value as string;
+                    history.push(path.replace(":topicId", value));
+                  }}
+                >
+                  {allTopics.map((topic) => (
+                    <MenuItem key={topic} value={topic}>
+                      {topic}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            )}
           </Grid>
         </Grow>
         <Grid container>
@@ -190,25 +239,27 @@ export function PoliticalFigureDetail({
             alignContent="flex-start"
             wrap="wrap"
             spacing={0}
-            xl={8}
+            xl={topicId ? 12 : 8}
           >
-            <Grow in={true}>
-              <StyledItem item xs={11} md={6} xl={6}>
-                <StyledPaper elevation={1}>
-                  <PoliticalFigureDescription
-                    politicalFigureData={
-                      selectedUser
-                        ? (selectedUser as TwitterUser)
-                        : selectedParty
-                        ? (selectedParty as Party)
-                        : selectedCoalition
-                        ? (selectedCoalition as Coalition)
-                        : null
-                    }
-                  ></PoliticalFigureDescription>
-                </StyledPaper>
-              </StyledItem>
-            </Grow>
+            {!topicId && (
+              <Grow in={true}>
+                <StyledItem item xs={11} md={6} xl={6}>
+                  <StyledPaper elevation={1}>
+                    <PoliticalFigureDescription
+                      politicalFigureData={
+                        selectedUser
+                          ? (selectedUser as TwitterUser)
+                          : selectedParty
+                          ? (selectedParty as Party)
+                          : selectedCoalition
+                          ? (selectedCoalition as Coalition)
+                          : null
+                      }
+                    ></PoliticalFigureDescription>
+                  </StyledPaper>
+                </StyledItem>
+              </Grow>
+            )}
             <Grow in={true}>
               <StyledItem item xs={11} md={6} xl={6}>
                 <StyledPaper elevation={1}>
@@ -219,20 +270,22 @@ export function PoliticalFigureDetail({
                 </StyledPaper>
               </StyledItem>
             </Grow>
-            <Grow in={true}>
-              <StyledItem item xs={11} md={6} xl={6}>
-                <StyledPaper elevation={1}>
-                  <Typography variant="h6" align="center">
-                    Topic analysis
-                  </Typography>
-                  <BarPlot
-                    data={topicData}
-                    onColumnClick={onTopicColumnClick}
-                    initialBarPlotSubject={BarPlotSubject.Topic}
-                  ></BarPlot>
-                </StyledPaper>
-              </StyledItem>
-            </Grow>
+            {!topicId && (
+              <Grow in={true}>
+                <StyledItem item xs={11} md={6} xl={6}>
+                  <StyledPaper elevation={1}>
+                    <Typography variant="h6" align="center">
+                      Topic analysis
+                    </Typography>
+                    <BarPlot
+                      data={topicData}
+                      onColumnClick={onTopicColumnClick}
+                      initialBarPlotSubject={BarPlotSubject.Topic}
+                    ></BarPlot>
+                  </StyledPaper>
+                </StyledItem>
+              </Grow>
+            )}
             <Grow in={true}>
               <StyledItem item xs={11} md={6} xl={6}>
                 <StyledPaper elevation={1}>
@@ -278,12 +331,12 @@ export function PoliticalFigureDetail({
             alignContent="flex-start"
             wrap="wrap"
             spacing={0}
-            xl={4}
+            xl={topicId ? 12 : 4}
           >
             <Grow in={true}>
-              <StyledItem item xs={11} md={8} lg={6} xl={12}>
+              <StyledItem item xs={11} md={8} lg={6} xl={topicId ? 6 : 12}>
                 <DynamicPaper elevation={1} style={{ position: "relative" }}>
-                  {!chosenTopic && (
+                  {!chosenTopic && !topicId && (
                     <IconButton
                       aria-label="refresh"
                       style={{ position: "absolute", top: 0, right: 0 }}
@@ -296,7 +349,7 @@ export function PoliticalFigureDetail({
                     </IconButton>
                   )}
                   <Typography variant="h6" align="center">
-                    {chosenTopic ? "Top" : "Random"} Tweets{" "}
+                    {chosenTopic || topicId ? "Top" : "Random"} Tweets{" "}
                     {chosenTopic || chosenSentiment ? "for (" : ""}
                     {chosenTopic ? `Topic ${chosenTopic}` : ""}
                     {chosenTopic && chosenSentiment ? `, ` : ""}

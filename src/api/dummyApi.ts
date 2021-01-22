@@ -4,6 +4,12 @@ import { SentimentData, TopicData } from "../models/types";
 import { Api } from "./api";
 
 export class DummyApi implements Api {
+  getTweetsForTopic(topic: string, limit?: string): Observable<Tweet[]> {
+    throw new Error("Method not implemented.");
+  }
+  getTopics(): Observable<string[]> {
+    throw new Error("Method not implemented.");
+  }
   getParty(partyId: string): Observable<Party | undefined> {
     throw new Error("Method not implemented.");
   }
