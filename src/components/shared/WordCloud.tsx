@@ -2,6 +2,8 @@ import React from "react";
 import ReactWordcloud, { MinMaxPair, Optional, Options } from "react-wordcloud";
 import styled from "styled-components";
 import { Word } from "../../models/model";
+import "tippy.js/dist/tippy.css";
+import "tippy.js/animations/scale.css";
 
 export interface WordCloudProps {
   words: Word[];
@@ -21,7 +23,7 @@ export function WordCloud({ words }: WordCloudProps) {
     enableOptimizations: true,
     padding: 2,
     scale: "sqrt",
-    fontSizes: [13, 40] as MinMaxPair
+    fontSizes: [13, 40] as MinMaxPair,
   };
 
   
