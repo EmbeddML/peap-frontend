@@ -64,6 +64,7 @@ export const BarPlot = ({
         .distinct()
         .toArray()
         .map((topic: string) => api.getWordsForTopic(topic, "15"));
+        
       forkJoin(topicRequests)
         .pipe(
           map(

@@ -129,7 +129,7 @@ export function PoliticalFigureDescription(
                       <b>Role:</b>
                     </Typography>
                     <Typography variant="body1" align="left">
-                      <b>Overall tweets:</b>
+                      <b>Tweets:</b>
                     </Typography>
                   </Grid>
                   <Grid item>
@@ -203,10 +203,10 @@ export function PoliticalFigureDescription(
                       <b>Coalition:</b>
                     </Typography>
                     <Typography variant="body1" align="left">
-                      <b>Tweets count:</b>
+                      <b>Politicians:</b>
                     </Typography>
                     <Typography variant="body1" align="left">
-                      <b>Politicians count:</b>
+                      <b>Tweets:</b>
                     </Typography>
                     <Typography variant="body1" align="left">
                       <b>Most active politician:</b>
@@ -220,10 +220,10 @@ export function PoliticalFigureDescription(
                       {politicalFigureData.coalition}
                     </Typography>
                     <Typography variant="body1" align="right">
-                      {politicalFigureData.tweetsCount}
+                      {politicalFigureData.politiciansCount}
                     </Typography>
                     <Typography variant="body1" align="right">
-                      {politicalFigureData.politiciansCount}
+                      {politicalFigureData.tweetsCount}
                     </Typography>
                     <Typography variant="body1" align="right">
                       {politicalFigureData.mostActivePolitician.name} (
@@ -283,13 +283,13 @@ export function PoliticalFigureDescription(
                       <b>Name:</b>
                     </Typography>
                     <Typography variant="body1" align="left">
-                      <b>Tweets count:</b>
+                      <b>Parties:</b>
                     </Typography>
                     <Typography variant="body1" align="left">
-                      <b>Parties count:</b>
+                      <b>Politicians:</b>
                     </Typography>
                     <Typography variant="body1" align="left">
-                      <b>Politicians count:</b>
+                      <b>Tweets:</b>
                     </Typography>
                     <Typography variant="body1" align="left">
                       <b>Most active politician:</b>
@@ -300,13 +300,13 @@ export function PoliticalFigureDescription(
                       {politicalFigureData.name}
                     </Typography>
                     <Typography variant="body1" align="right">
-                      {politicalFigureData.tweetsCount}
-                    </Typography>
-                    <Typography variant="body1" align="right">
                       {politicalFigureData.partiesCount}
                     </Typography>
                     <Typography variant="body1" align="right">
                       {politicalFigureData.politiciansCount}
+                    </Typography>
+                    <Typography variant="body1" align="right">
+                      {politicalFigureData.tweetsCount}
                     </Typography>
                     <Typography variant="body1" align="right">
                       {politicalFigureData.mostActivePolitician.name} (

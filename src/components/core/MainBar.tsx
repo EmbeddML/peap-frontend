@@ -15,7 +15,7 @@ import { useEffect, useState } from "react";
 import { TwitterUser } from "../../models/model";
 import { api } from "../../api/api";
 import { useHistory } from "react-router-dom";
-
+import politician from "../../assets/politician192.png"
 
 const StyledTextField = styled(TextField)`
   & .MuiInputBase-input {
@@ -82,14 +82,16 @@ export function MainBar({ handleSidebarOpen }: MainBarProps) {
                 </IconButton>
               </Grid>
             </Grid>
+          
 
             <Grid item style={{ marginRight: "16px" }}>
               <Grid container alignContent="center" style={{ height: "100%" }}>
                 <Typography variant="h6">Political figures analysis</Typography>
               </Grid>
             </Grid>
-            {(currentUrl.includes("politicians") || currentUrl === "/") && <Grid item style={{ flex: "1 0 auto" }}>
-              <Grid
+           
+            <Grid item style={{ flex: "1 0 auto" }}>
+            {(currentUrl.includes("politicians") || currentUrl === "/") && <Grid
                 container
                 style={{ height: "100%" }}
                 justify="flex-end"
@@ -143,8 +145,13 @@ export function MainBar({ handleSidebarOpen }: MainBarProps) {
                     </Grid>
                   </Grid>
                 </Grid>
+              </Grid>}
+            </Grid>
+            <Grid item>
+              <Grid container alignContent="center" style={{ height: "100%" }}>
+                <img src={politician} style={{height: "48px"}} alt="logo"/>
               </Grid>
-            </Grid>}
+            </Grid>
           </Grid>
         </Toolbar>
       </AppBar>

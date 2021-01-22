@@ -42,6 +42,7 @@ export class Party {
   ) {}
 }
 
+
 export class Coalition {
   constructor(
     public id: string,

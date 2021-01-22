@@ -67,14 +67,17 @@ export function TwitterPlot({
     {} as Readonly<Figure>
   );
 
-  const onPlotlyClick = useCallback((event: any) => {
-    const username = event.points[0].text;
-    if (!selectedUser) {
-      history.push(`${path}/${username}`);
-    } else if (!url.includes(username)) {
-      history.push(path.replace(":username", username));
-    }
-  }, [history, selectedUser, path, url])
+  const onPlotlyClick = useCallback(
+    (event: any) => {
+      const username = event.points[0].text;
+      if (!selectedUser) {
+        history.push(`${path}/${username}`);
+      } else if (!url.includes(username)) {
+        history.push(path.replace(":username", username));
+      }
+    },
+    [history, selectedUser, path, url]
+  );
 
   useEffect(() => {
     setDf(new DataFrame(data));
@@ -243,7 +246,7 @@ export function TwitterPlot({
         frames={plotState.frames!}
       />
       {floater && (
-        <Floater style={selectedUsername ? {marginTop: "0"} : {}}>
+        <Floater style={selectedUsername ? { marginTop: "0" } : {}}>
           <StyledFormControl>
             <InputLabel id="clustering-property-label">
               Clustering property
