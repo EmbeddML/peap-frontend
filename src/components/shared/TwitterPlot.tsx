@@ -32,13 +32,13 @@ const Floater = styled(Paper)`
 `;
 
 const StyledFormControl = styled(FormControl)`
-  min-width: 200px;
+  width: 240px;
   margin-right: 16px;
 `;
 
 interface TwitterPlotProps {
   data: TwitterUser[];
-  availableClusteringProperties: string[];
+  availableClusteringProperties: [string, string][];
   initialClusteringProperty: string;
   is_3D?: boolean;
   selectedUsername?: string;
@@ -255,13 +255,14 @@ export function TwitterPlot({
               labelId="clustering-property-label"
               id="clustering-property-select"
               value={clusteringProperty}
+              autoWidth
               onChange={(event) =>
                 setClusteringProperty(event?.target.value as string)
               }
             >
               {availableClusteringProperties.map((availableProperty) => (
-                <MenuItem value={availableProperty}>
-                  {availableProperty}
+                <MenuItem value={availableProperty[0]}>
+                  {availableProperty[1]}
                 </MenuItem>
               ))}
             </Select>

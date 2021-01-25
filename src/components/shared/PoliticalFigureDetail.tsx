@@ -55,7 +55,7 @@ export interface PoliticalFigureDetailProps {
   politicalFigureDetailType: PoliticalFigureDetailType;
   data?: TwitterUser[];
   clusteringProperty?: string;
-  availableClusteringProperties?: string[];
+  availableClusteringProperties?: [string, string][];
 }
 
 export function PoliticalFigureDetail({

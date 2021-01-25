@@ -18,13 +18,13 @@ export function Politicians() {
   const [
     availableClusteringProperties,
     setAvailableClusteringProperties,
-  ] = useState<string[]>([
-    "party",
-    "coalition",
-    "role",
-    "cluster_dbscan_id",
-    "cluster_kmeans_id",
-    "cluster_pam_id",
+  ] = useState<[string, string][]>([
+    ["party", "Party"],
+    ["coalition", "Coalition"],
+    ["role", "Role"],
+    ["cluster_dbscan_id", "Group assignment - DBSCAN"],
+    ["cluster_kmeans_id", "Group assignment - K-Means"],
+    ["cluster_pam_id", "Group assignment - GMM"],
   ]);
 
   useEffect(() => {
