@@ -192,6 +192,11 @@ export function CustomUser() {
       setAnalyzing(Analyzing.Error);
     });
 
+    webSocketClient.addEventListener("close", (event) => {
+      console.log("Close");
+      console.log(event);
+    });
+
     return () => webSocketClient.close();
   }, [webSocketClient]);
 

@@ -213,7 +213,7 @@ export function PoliticalFigureDetail({
           <Grid container justify="center" style={{ marginTop: "16px" }}>
             <Typography variant="h5" align="center">
               {selectedUser
-                ? (selectedUser.name ? "Politician" : "User")
+                ? (selectedUser.name ? "Politician" : "Twitter user")
                 : selectedParty
                 ? "Party"
                 : selectedCoalition

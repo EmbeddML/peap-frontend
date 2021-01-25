@@ -134,7 +134,7 @@ export function PoliticalFigureDescription(
                       </>
                     )}
                     <Typography variant="body1" align="left">
-                      <b>Tweets:</b>
+                      <b>{politicalFigureData.name ? "Tweets:" : "Gathered tweets"}</b>
                     </Typography>
                   </Grid>
                   <Grid item>
