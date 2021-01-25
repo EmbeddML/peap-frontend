@@ -4,6 +4,9 @@ import { SentimentData, TopicData } from "../models/types";
 import { Api } from "./api";
 
 export class DummyApi implements Api {
+  getWebSocketClient(): Observable<WebSocket> {
+    throw new Error("Method not implemented.");
+  }
   getTweetsForTopic(topic: string, limit?: string): Observable<Tweet[]> {
     throw new Error("Method not implemented.");
   }

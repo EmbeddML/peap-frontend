@@ -49,6 +49,8 @@ export interface Api {
     sentiment?: string
   ): Observable<Tweet[]>;
 
+  getWebSocketClient(): Observable<WebSocket>;
+
 }
 
 export const api: Api = USE_DUMMY_API ? new DummyApi() : new RemoteApi();

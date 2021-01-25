@@ -94,6 +94,15 @@ export function About() {
               <Profile data={data} index={index}></Profile>
             ))}
           </Grid>
+          <Grid item>
+            <Typography
+              variant="subtitle1"
+              align="center"
+              style={{ marginTop: "16px" }}
+            >
+              Contact: <a href="mailto:embedd.ml@gmail.com">embedd.ml@gmail.com</a>
+            </Typography>
+          </Grid>
         </Grid>
         <Grid
           container

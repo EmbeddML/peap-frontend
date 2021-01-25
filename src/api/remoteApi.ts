@@ -1,4 +1,4 @@
-import { forkJoin, Observable } from "rxjs";
+import { forkJoin, Observable, of } from "rxjs";
 import { fromFetch } from "rxjs/fetch";
 import { map, switchMap, tap } from "rxjs/operators";
 import { Coalition, Party, Tweet, TwitterUser, Word } from "../models/model";
@@ -6,6 +6,10 @@ import { SentimentData, TopicData } from "../models/types";
 import { Api } from "./api";
 
 const BACKEND_API_URL = process.env.REACT_APP_BACKEND_API_URL!;
+const BACKEND_WSS_URL = process.env.REACT_APP_BACKEND_WSS_URL!;
+
+const WEBSOCKET_LINK = `${BACKEND_WSS_URL}/new`
+
 
 const ALL_USERS_LINK = `${BACKEND_API_URL}/user`;
 const USER_LINK = (username: string) => `${ALL_USERS_LINK}/${username}`;
@@ -94,7 +98,11 @@ const TOPIC_TWEETS_LINK = (topic_id: string, limit?: string) => {
   return link;
 };
 
+
 export class RemoteApi implements Api {
+  getWebSocketClient(): Observable<WebSocket> {
+    return of(new WebSocket(WEBSOCKET_LINK))
+  }
 
   //==========================PARTIES================================
 

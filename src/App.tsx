@@ -22,6 +22,7 @@ import { About } from "./components/About";
 import { Parties } from "./components/Parties";
 import { Coalitions } from "./components/Coalitions";
 import { Topics } from "./components/Topics";
+import { CustomUser } from "./components/CustomUser";
 
 const GridAppBar = styled(Grid)`
   flex: 0 0 auto;
@@ -90,6 +91,9 @@ function App() {
                   </Route>
                   <Route path="/about">
                     <About />
+                  </Route>
+                  <Route path="/customUser">
+                    <CustomUser />
                   </Route>
                   <Redirect to="/politicians" />
                 </Switch>
