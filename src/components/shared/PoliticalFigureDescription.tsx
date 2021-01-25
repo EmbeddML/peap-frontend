@@ -116,18 +116,23 @@ export function PoliticalFigureDescription(
                     <Typography variant="body1" align="left">
                       <b>Username:</b>
                     </Typography>
-                    <Typography variant="body1" align="left">
-                      <b>Name:</b>
-                    </Typography>
-                    <Typography variant="body1" align="left">
-                      <b>Party:</b>
-                    </Typography>
-                    <Typography variant="body1" align="left">
-                      <b>Coalition:</b>
-                    </Typography>
-                    <Typography variant="body1" align="left">
-                      <b>Role:</b>
-                    </Typography>
+                    {politicalFigureData.name && (
+                      <>
+                        {" "}
+                        <Typography variant="body1" align="left">
+                          <b>Name:</b>
+                        </Typography>
+                        <Typography variant="body1" align="left">
+                          <b>Party:</b>
+                        </Typography>
+                        <Typography variant="body1" align="left">
+                          <b>Coalition:</b>
+                        </Typography>
+                        <Typography variant="body1" align="left">
+                          <b>Role:</b>
+                        </Typography>{" "}
+                      </>
+                    )}
                     <Typography variant="body1" align="left">
                       <b>Tweets:</b>
                     </Typography>
@@ -175,7 +180,11 @@ export function PoliticalFigureDescription(
           </Grid>
 
           <Grid container item justify="center">
-            <StyledAvatar alt="avatar" src={avatarsParties[+politicalFigureData.id]} variant="rounded">
+            <StyledAvatar
+              alt="avatar"
+              src={avatarsParties[+politicalFigureData.id]}
+              variant="rounded"
+            >
               {politicalFigureData.name.substr(0, 7)}
             </StyledAvatar>
           </Grid>
@@ -258,7 +267,11 @@ export function PoliticalFigureDescription(
           </Grid>
 
           <Grid container item justify="center">
-            <StyledAvatar alt="avatar" src={avatarsCoalitions[+politicalFigureData.id]} variant="rounded">
+            <StyledAvatar
+              alt="avatar"
+              src={avatarsCoalitions[+politicalFigureData.id]}
+              variant="rounded"
+            >
               {politicalFigureData.name.substr(0, 7)}
             </StyledAvatar>
           </Grid>

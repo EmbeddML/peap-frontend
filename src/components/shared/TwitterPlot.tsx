@@ -32,7 +32,7 @@ const Floater = styled(Paper)`
 `;
 
 const StyledFormControl = styled(FormControl)`
-  width: 240px;
+  min-width: 240px;
   margin-right: 16px;
 `;
 

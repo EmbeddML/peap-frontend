@@ -34,6 +34,7 @@ enum Analyzing {
   Finished,
   AlreadyExists,
   NoTweetsFound,
+  CantFind,
   Error,
   Close,
 }
@@ -77,7 +78,14 @@ export function CustomUser() {
       webSocketClient?.send(analyzedUsername);
       setAnalyzedMessageText(`Starting analyzing ${analyzedUsername}`);
     } else if (analyzing === Analyzing.Error) {
-      setAnalyzedMessageText(`Error for ${analyzedUsername}`);
+      setAnalyzedMessageText(`Error for ${analyzedUsername}.  Redirecting...`);
+      let timer = setTimeout(
+        () => history.goBack(),
+        3000
+      );
+      return () => {
+        clearTimeout(timer);
+      };
     } else if (analyzing === Analyzing.CollectingTweets) {
       setAnalyzedMessageText(`Collecting tweets for ${analyzedUsername}`);
     } else if (analyzing === Analyzing.AnalyzingTweets) {
@@ -109,6 +117,16 @@ export function CustomUser() {
       setBackdropOpen(true);
       setAnalyzedMessageText(
         `No tweets found for ${analyzedUsername}. Redirecting...`
+      );
+      let timer = setTimeout(() => history.goBack(), 3000);
+      return () => {
+        clearTimeout(timer);
+      };
+    } else if (analyzing === Analyzing.CantFind) {
+      setDialogOpen(false);
+      setBackdropOpen(true);
+      setAnalyzedMessageText(
+        `Can't find account ${analyzedUsername}. Redirecting...`
       );
       let timer = setTimeout(() => history.goBack(), 3000);
       return () => {
@@ -159,6 +177,8 @@ export function CustomUser() {
           setAnalyzing(Analyzing.AlreadyExists);
         } else if (text.includes("No tweets found")) {
           setAnalyzing(Analyzing.NoTweetsFound);
+        } else if (text.includes("Can't find")) {
+          setAnalyzing(Analyzing.CantFind);
         } else {
           setAnalyzing(Analyzing.Error);
         }
@@ -188,7 +208,7 @@ export function CustomUser() {
         <DialogContent>
           <DialogContentText>
             Please enter Twitter username here. We will analyze this account for
-            you.
+            you. It can take a couple of minutes.
           </DialogContentText>
           <TextField
             autoFocus

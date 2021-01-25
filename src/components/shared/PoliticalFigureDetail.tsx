@@ -72,6 +72,7 @@ export function PoliticalFigureDetail({
     coalitionId: string;
     topicId: string;
   }>();
+  const [dataCopy, setDataCopy] = useState<TwitterUser[] | undefined>(data);
   const [selectedUser, setSelectedUser] = useState<TwitterUser | null>();
   const [selectedParty, setSelectedParty] = useState<Party | null>();
   const [
@@ -85,6 +86,18 @@ export function PoliticalFigureDetail({
   const [tweetsData, setTweetsData] = useState<Tweet[]>([]);
   const [chosenTopic, setChosenTopic] = useState<string>("");
   const [chosenSentiment, setChosenSentiment] = useState<string>("");
+
+  useEffect(() => {
+    if (selectedUser && !selectedUser.name) {
+      const newData = Object.assign([], data)
+      selectedUser.name = ""
+      selectedUser.party = ""
+      selectedUser.coalition = ""
+      selectedUser.role = ""
+      newData.push(selectedUser)
+      setDataCopy(newData)
+    }
+  }, [data, selectedUser])
 
   const refreshTweetsList = useCallback(() => {
     if (selectedUser) {
@@ -200,7 +213,7 @@ export function PoliticalFigureDetail({
           <Grid container justify="center" style={{ marginTop: "16px" }}>
             <Typography variant="h5" align="center">
               {selectedUser
-                ? "Politician"
+                ? (selectedUser.name ? "Politician" : "User")
                 : selectedParty
                 ? "Party"
                 : selectedCoalition
@@ -310,7 +323,7 @@ export function PoliticalFigureDetail({
                       Speech analysis
                     </Typography>
                     <TwitterPlot
-                      data={data as TwitterUser[]}
+                      data={dataCopy as TwitterUser[]}
                       is_3D={true}
                       availableClusteringProperties={
                         availableClusteringProperties
