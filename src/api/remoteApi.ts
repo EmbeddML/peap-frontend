@@ -377,9 +377,9 @@ export class RemoteApi implements Api {
             user["x_graph3d"],
             user["y_graph3d"],
             user["z_graph3d"],
-            user["cluster_dbscan_id"],
+            user["cluster_mean_shift_id"],
             user["cluster_kmeans_id"],
-            user["cluster_pam_id"],
+            user["cluster_gmm_id"],
             ""
           )
       )
@@ -411,9 +411,9 @@ export class RemoteApi implements Api {
               user["x_graph3d"],
               user["y_graph3d"],
               user["z_graph3d"],
-              user["cluster_dbscan_id"],
+              user["cluster_mean_shift_id"],
               user["cluster_kmeans_id"],
-              user["cluster_pam_id"],
+              user["cluster_gmm_id"],
               ""
             )
         )

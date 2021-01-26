@@ -185,9 +185,9 @@ export function TwitterPlot({
           "coalition",
           "role",
           "tweets_count",
-          "cluster_dbscan_id",
+          "cluster_mean_shift_id",
           "cluster_kmeans_id",
-          "cluster_pam_id",
+          "cluster_gmm_id",
         ])
         .toRows();
 

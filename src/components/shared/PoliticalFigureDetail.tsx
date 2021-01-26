@@ -329,7 +329,7 @@ export function PoliticalFigureDetail({
                         availableClusteringProperties
                       }
                       initialClusteringProperty={clusteringProperty}
-                      selectedUsername={username}
+                      selectedUsername={username.toLowerCase()}
                     ></TwitterPlot>
                   </PlotPaper>
                 </StyledItem>

@@ -22,9 +22,9 @@ export function Politicians() {
     ["party", "Party"],
     ["coalition", "Coalition"],
     ["role", "Role"],
-    ["cluster_dbscan_id", "Group assignment - DBSCAN"],
+    ["cluster_mean_shift_id", "Group assignment - Mean Shift"],
     ["cluster_kmeans_id", "Group assignment - K-Means"],
-    ["cluster_pam_id", "Group assignment - GMM"],
+    ["cluster_gmm_id", "Group assignment - GMM"],
   ]);
 
   useEffect(() => {

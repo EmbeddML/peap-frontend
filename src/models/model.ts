@@ -13,9 +13,9 @@ export class TwitterUser {
     public x_graph3d: number,
     public y_graph3d: number,
     public z_graph3d: number,
-    public cluster_dbscan_id: number,
+    public cluster_mean_shift_id: number,
     public cluster_kmeans_id: number,
-    public cluster_pam_id: number,
+    public cluster_gmm_id: number,
     public photoUrl: string
   ) {}
 }
