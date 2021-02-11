@@ -1,6 +1,6 @@
 {
-  "short_name": "Political figures",
-  "name": "Political figures analysis",
+  "short_name": "PEAP",
+  "name": "Politicians Exploratory Analysis Platform",
   "icons": [
     {
       "src": "favicon.ico",

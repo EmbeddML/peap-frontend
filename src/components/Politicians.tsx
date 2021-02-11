@@ -12,7 +12,7 @@ export function Politicians() {
   let { path } = useRouteMatch();
   const [twitterUsers, setTwitterUsers] = useState<TwitterUser[]>([]);
   const [clusteringProperty, setClusteringProperty] = useState<string>(
-    "cluster_kmeans_id"
+    "coalition"
   );
 
   const [

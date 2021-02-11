@@ -86,7 +86,7 @@ export function MainBar({ handleSidebarOpen }: MainBarProps) {
 
             <Grid item style={{ marginRight: "16px" }}>
               <Grid container alignContent="center" style={{ height: "100%" }}>
-                <Typography variant="h6">Political figures analysis</Typography>
+                <Typography variant="h6">Politicians Exploratory Analysis Platform</Typography>
               </Grid>
             </Grid>
            
