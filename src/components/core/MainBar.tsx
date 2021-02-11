@@ -91,7 +91,7 @@ export function MainBar({ handleSidebarOpen }: MainBarProps) {
             </Grid>
            
             <Grid item style={{ flex: "1 0 auto" }}>
-            {(currentUrl.includes("politicians") || currentUrl === "/") && <Grid
+            {(currentUrl.includes("politicians")) && <Grid
                 container
                 style={{ height: "100%" }}
                 justify="flex-end"

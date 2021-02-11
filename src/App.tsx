@@ -23,6 +23,7 @@ import { Parties } from "./components/Parties";
 import { Coalitions } from "./components/Coalitions";
 import { Topics } from "./components/Topics";
 import { CustomUser } from "./components/CustomUser";
+import { Home } from "./components/Home";
 
 const GridAppBar = styled(Grid)`
   flex: 0 0 auto;
@@ -95,7 +96,10 @@ function App() {
                   <Route path="/customUser">
                     <CustomUser />
                   </Route>
-                  <Redirect to="/politicians" />
+                  <Route exact path="/">
+                    <Home />
+                  </Route>
+                  <Redirect to="/" />
                 </Switch>
               </GridContent>
             </Grid>

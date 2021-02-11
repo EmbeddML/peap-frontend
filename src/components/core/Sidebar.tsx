@@ -16,7 +16,7 @@ import { Link, useHistory } from "react-router-dom";
 import styled from "styled-components";
 import GroupWorkIcon from "@material-ui/icons/GroupWork";
 import AccountTreeIcon from "@material-ui/icons/AccountTree";
-import SubjectIcon from "@material-ui/icons/Subject";
+import HomeIcon from "@material-ui/icons/Home";
 import { Textsms } from "@material-ui/icons";
 
 const StyledPaper = styled.div`
@@ -42,6 +42,7 @@ class DrawerListItem {
 }
 
 const drawerListItems = [
+  new DrawerListItem("home", "/", "Home", <HomeIcon />),
   new DrawerListItem(
     "politicians",
     "/politicians",
@@ -56,7 +57,12 @@ const drawerListItems = [
     <AccountTreeIcon />
   ),
   new DrawerListItem("topics", "/topics", "Topics", <Textsms />),
-  new DrawerListItem("customUser", "/customUser", "New User", <PersonAddIcon />),
+  new DrawerListItem(
+    "customUser",
+    "/customUser",
+    "New User",
+    <PersonAddIcon />
+  ),
   new DrawerListItem("about", "/about", "About", <InfoIcon />, true),
 ];
 
@@ -87,9 +93,15 @@ export const Sidebar = React.forwardRef((props: SidebarProps, ref) => {
   };
 
   useEffect(() => {
-    const index = drawerListItems.findIndex(drawerListItem => currentUrl.includes(drawerListItem.to))
-    if (index !== -1) {
-      setSelectedIndex(index)
+    if (currentUrl === "/") {
+      setSelectedIndex(0);
+    } else {
+      const index = drawerListItems.slice(1).findIndex(
+        (drawerListItem) => currentUrl.includes(drawerListItem.to)
+      );
+      if (index !== -1) {
+        setSelectedIndex(index + 1);
+      }
     }
   }, [currentUrl]);
 

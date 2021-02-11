@@ -87,9 +87,9 @@ export function CustomUser() {
         clearTimeout(timer);
       };
     } else if (analyzing === Analyzing.CollectingTweets) {
-      setAnalyzedMessageText(`Collecting tweets for ${analyzedUsername}`);
+      setAnalyzedMessageText(`Collecting tweets for ${analyzedUsername} (can take a couple of minutes 😉)`);
     } else if (analyzing === Analyzing.AnalyzingTweets) {
-      setAnalyzedMessageText(`Analyzing tweets for ${analyzedUsername}`);
+      setAnalyzedMessageText(`Analyzing tweets for ${analyzedUsername} (can take a couple of minutes 😉)`);
     } else if (analyzing === Analyzing.Canceled) {
       setAnalyzedMessageText(`Canceled analyzing tweets for ${analyzedUsername}.  Redirecting...`);
       let timer = setTimeout(
