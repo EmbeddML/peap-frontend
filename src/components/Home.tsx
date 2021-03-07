@@ -74,12 +74,12 @@ const exploreItems = [
     "/topics",
     <TextsmsIcon color="primary" style={{ fontSize: 100 }} />
   ),
-  new ExploreItem(
-    "New Twitter account",
-    "Want to know something more? Run all of our analyses on other Twitter accounts!",
-    "/customUser",
-    <PersonAddIcon color="primary" style={{ fontSize: 100 }} />
-  ),
+  // new ExploreItem(
+  //   "New Twitter account",
+  //   "Want to know something more? Run all of our analyses on other Twitter accounts!",
+  //   "/customUser",
+  //   <PersonAddIcon color="primary" style={{ fontSize: 100 }} />
+  // ),
 ];
 
 export function Home() {
@@ -87,13 +87,13 @@ export function Home() {
 
   return (
     <Fade in={true}>
-      <>
+      <Grid container direction="column" justify="center" alignItems="stretch" wrap="nowrap" style={{minHeight: "100%"}} xl={10} >
         <Grow in={true}>
           <Grid
             container
             direction="column"
             justify="center"
-            style={{ marginTop: "16px" }}
+            style={{ marginTop: "16px", flex: "0 0 auto" }}
           >
             <Typography variant="h5" align="center">
               Hi!
@@ -109,10 +109,11 @@ export function Home() {
           direction="row"
           justify="center"
           alignItems="center"
-          alignContent="flex-start"
+          alignContent="center"
           wrap="wrap"
           spacing={0}
           xs={12}
+          style={{ flex: "0 0 auto" }}
         >
           {exploreItems.map((exploreItem) => (
             <Grow in={true}>
@@ -153,7 +154,7 @@ export function Home() {
             </Grow>
           ))}
         </StyledContainer>
-      </>
+      </Grid>
     </Fade>
   );
 }

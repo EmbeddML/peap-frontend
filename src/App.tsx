@@ -93,9 +93,9 @@ function App() {
                   <Route path="/about">
                     <About />
                   </Route>
-                  <Route path="/customUser">
+                  {/* <Route path="/customUser">
                     <CustomUser />
-                  </Route>
+                  </Route> */}
                   <Route exact path="/">
                     <Home />
                   </Route>

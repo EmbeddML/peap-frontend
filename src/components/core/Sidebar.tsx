@@ -57,12 +57,12 @@ const drawerListItems = [
     <AccountTreeIcon />
   ),
   new DrawerListItem("topics", "/topics", "Topics", <Textsms />),
-  new DrawerListItem(
-    "customUser",
-    "/customUser",
-    "New User",
-    <PersonAddIcon />
-  ),
+  // new DrawerListItem(
+  //   "customUser",
+  //   "/customUser",
+  //   "New User",
+  //   <PersonAddIcon />
+  // ),
   new DrawerListItem("about", "/about", "About", <InfoIcon />, true),
 ];
 
