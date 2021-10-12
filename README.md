@@ -17,6 +17,7 @@
 
 This is the source code for the frontend of Politicians Exploratory Analysis Platform. 
 A demo app which covers Polish politicians is available [here](https://politicians.embedd.ml/).
+Backend is available [here](https://github.com/PEAP2021/peap-backend).
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
